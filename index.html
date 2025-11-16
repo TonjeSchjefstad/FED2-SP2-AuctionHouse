@@ -3,6 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/public/assets/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/public/assets/favicon-16x16.png"
+    />
     <link rel="stylesheet" href="/src/css/style.css" />
     <script type="module" src="/src/js/main.js"></script>
     <title>Maison Ardéne Auction House</title>
@@ -10,7 +25,249 @@
 
   <body>
     <header></header>
-    <main></main>
+
+    <main class="max-w-[1440px] mx-auto">
+      <section
+        class="relative py-20 md:py-32 px-4 bg-cover bg-center"
+        style="background-image: url(&quot;public\assets\hero-image.webp&quot;)"
+      >
+        <div class="absolute inset-0 bg-white/70"></div>
+        <div
+          class="relative max-w-[1440px] mx-auto px-6 md:px-8 lg:px-4 text-center text-center"
+        >
+          <h1
+            class="font-heading font-bold text-4xl md:text-6xl lg:text-7xl mb-6 text-primary"
+          >
+            Where Rarity Meets Refinement
+          </h1>
+          <p
+            class="font-sans text-lg font-medium md:text-xl max-w-3xl mx-auto mb-8 text-primary"
+          >
+            Maison Ardéne connects discerning collectors with rare art, design,
+            and collectibles from around the world.
+          </p>
+          <button class="btn-dark">Sell With us</button>
+        </div>
+      </section>
+
+      <section class="hidden md:block bg-bg-dark text-button-dark-text py-3">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-4">
+          <div class="grid grid-cols-4 gap-8">
+            <div class="flex items-center justify-center gap-3">
+              <svg
+                class="w-8 h-8 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+              </svg>
+              <span class="font-heading tracking-wider text-sm lg:text-base"
+                >Authenticated Items</span
+              >
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="flex items-center justify-center gap-3">
+              <svg
+                class="w-8 h-8 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"
+                />
+              </svg>
+              <span class="font-heading tracking-wider text-sm lg:text-base"
+                >Secure Bidding</span
+              >
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="flex items-center justify-center gap-3">
+              <svg
+                class="w-8 h-8 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+                />
+              </svg>
+              <span class="font-heading tracking-wider text-sm lg:text-base"
+                >Worldwide Shipping</span
+              >
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="flex items-center justify-center gap-3">
+              <svg
+                class="w-8 h-8 flex-shrink-0"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                />
+              </svg>
+              <span class="font-heading tracking-wider text-sm lg:text-base"
+                >Expert Appraisals</span
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-12 md:py-20 bg-primary-bg">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-4">
+          <h2
+            class="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-left mb-12"
+          >
+            Highlighted Listings
+          </h2>
+
+          <div
+            class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          >
+            <div class="product-card">
+              <img src="#" alt="Product" class="product-card-image" />
+              <div class="product-card-content">
+                <p class="product-card-time">Ends in 6h 23m</p>
+                <h3 class="product-card-title">Rolex Daytona Cosmograph</h3>
+                <p class="product-card-bid">CURRENT BID: $ 10,000</p>
+                <button class="btn-gold w-full">View</button>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <img src="#" alt="Product" class="product-card-image" />
+              <div class="product-card-content">
+                <p class="product-card-time">Ends in 12h 45m</p>
+                <h3 class="product-card-title">Vintage Hermès Bag</h3>
+                <p class="product-card-bid">CURRENT BID: $ 8,500</p>
+                <button class="btn-gold w-full">View</button>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <img src="#" alt="Product" class="product-card-image" />
+              <div class="product-card-content">
+                <p class="product-card-time">Ends in 3h 12m</p>
+                <h3 class="product-card-title">Art Deco Diamond Ring</h3>
+                <p class="product-card-bid">CURRENT BID: $ 15,200</p>
+                <button class="btn-gold w-full">View</button>
+              </div>
+            </div>
+
+            <div class="product-card">
+              <img src="#" alt="Product" class="product-card-image" />
+              <div class="product-card-content">
+                <p class="product-card-time">Ends in 8h 56m</p>
+                <h3 class="product-card-title">Antique Pocket Watch</h3>
+                <p class="product-card-bid">CURRENT BID: $ 5,750</p>
+                <button class="btn-gold w-full">View</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-right">
+            <a href="/listings.html" class="font-heading text-lg text-right"
+              >View All</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="py-12 md:py-20 bg-primary-bg">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-4">
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
+          >
+            <div>
+              <h2
+                class="font-heading font-bold text-3xl md:text-4xl lg:text-5xl mb-6"
+              >
+                Sell With Maison Ardéne
+              </h2>
+              <p class="font-sans text-base md:text-lg mb-4">
+                Entrust your rare treasures to a global audience of discerning
+                collectors.
+              </p>
+              <p class="font-sans text-base md:text-lg mb-8">
+                Our specialists offer tailored appraisals, white-glove service,
+                and access to exclusive auctions. Submit your item for a
+                complimentary estimate and begin your journey with Maison
+                Ardéne.
+              </p>
+              <button class="btn-dark">Begin Consignment</button>
+            </div>
+            <div>
+              <img
+                src="/public/assets/sell-with-us.webp"
+                alt="Gallery interior"
+                class="w-full h-auto rounded"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="py-12 md:py-20 bg-primary-bg">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-4">
+          <h2
+            class="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-left mb-12"
+          >
+            Shop by Category
+          </h2>
+
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="#" class="group">
+              <div class="aspect-square overflow-hidden rounded mb-4">
+                <img
+                  src="/public/assets/categories-handbags.jpg"
+                  alt="Handbags"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <h3 class="font-heading text-xl text-center">Handbags</h3>
+            </a>
+
+            <a href="#" class="group">
+              <div class="aspect-square overflow-hidden rounded mb-4">
+                <img
+                  src="/public/assets/categories-watches.webp"
+                  alt="Watches"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <h3 class="font-heading text-xl text-center">Watches</h3>
+            </a>
+
+            <a href="#" class="group">
+              <div class="aspect-square overflow-hidden rounded mb-4">
+                <img
+                  src="/public/assets/categories-jewelry.jpg"
+                  alt="Jewelry"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <h3 class="font-heading text-xl text-center">Jewelry</h3>
+            </a>
+
+            <a href="#" class="group">
+              <div class="aspect-square overflow-hidden rounded mb-4">
+                <img
+                  src="/public/assets/categories-collectibles.webp"
+                  alt="Collectibles"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <h3 class="font-heading text-xl text-center">Collectibles</h3>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
     <footer></footer>
   </body>
 </html>
