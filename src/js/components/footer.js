@@ -3,7 +3,7 @@ export function renderFooter() {
 
   return `
     <div class="bg-bg-dark text-button-dark-text py-12 md:py-16">
-      <div class="max-w-7xl mx-auto px-4">
+      <div class="max-w-[1440px] mx-auto px-8 md:px-8 lg:px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           
           <div class = "text-center">

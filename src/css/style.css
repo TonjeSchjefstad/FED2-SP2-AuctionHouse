@@ -29,3 +29,96 @@
     --font-logo-small: "Inter", sans-serif;
     --font-button: "Inter", sans-serif;
 }
+
+@layer base {
+    body {
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--color-bg-primary);
+    }
+
+    main {
+        flex: 1;
+    }
+}
+
+@layer components {
+    .btn-gold {
+        background-color: var(--color-button-gold);
+        color: var(--color-button-gold-text);
+        font-family: var(--font-button);
+        font-weight: bold;
+        padding: 0.75rem 2rem;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .btn-gold:hover {
+        background-color: var(--color-button-gold-hovered);
+    }
+
+    .btn-gold:active {
+        background-color: var(--color-button-gold-active);
+    }
+
+    .btn-dark {
+        background-color: var(--color-button-dark);
+        color: var(--color-button-dark-text);
+        font-family: var(--font-button);
+        font-weight: 600;
+        padding: 0.75rem 5rem;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .btn-dark:hover {
+        background-color: var(--color-button-dark-hovered);
+    }
+
+    .product-card {
+        background-color: var(--color-card);
+        border-radius: 4px;
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .product-card-image {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        background-color: #e5e5e5;
+    }
+
+    .product-card-content {
+        padding: 1rem;
+    }
+
+    .product-card-time {
+        font-size: 0.875rem;
+        color: var(--color-primary-text);
+        opacity: 0.7;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-card-title {
+        font-family: var(--font-heading);
+        font-weight: bold;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-card-bid {
+        font-family: var(--font-button);
+        font-weight: bold;
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+    }
+}
