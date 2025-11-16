@@ -3,10 +3,10 @@
 @import "tailwindcss";
 
 @theme {
-    --color-bg-primary: #F5F2EB;
+    --color-primary-bg: #F5F2EB;
     --color-bg-dark: #0E2033;
 
-    --color-text-primary: #1B1C1E;
+    --color-primary-text: #1B1C1E;
     --color-text-secondary: #F5F2EB;
 
     --color-button-gold: #C6A24A;
