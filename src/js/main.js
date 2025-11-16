@@ -1,3 +1,7 @@
 import "../css/style.css";
+import { renderFooter } from "../js/components/footer.js";
 
-console.log("Vite + Tailwind loaded!");
+const footer = document.querySelector("footer");
+if (footer) {
+  footer.innerHTML = renderFooter();
+}
