@@ -258,4 +258,29 @@ export function initNavigation() {
     profileMenu.classList.add("translate-x-full");
     profileOverlay.classList.add("hidden");
   });
+
+  // Register form submit
+  document
+    .getElementById("register-form")
+    ?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("register-email").value;
+      const password = document.getElementById("register-password").value;
+
+      const name = email.split("@")[0].replace(".", "_");
+
+      try {
+        const { registerUser } = await import("../api/auth/register.js");
+        await registerUser({ name, email, password });
+
+        alert("Registration successful! Please sign in.");
+
+        // Switch to sign in view
+        hideAllProfileViews();
+        profileSigninView.classList.remove("hidden");
+      } catch (error) {
+        alert(error.message);
+      }
+    });
 }
