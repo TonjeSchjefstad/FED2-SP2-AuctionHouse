@@ -283,4 +283,36 @@ export function initNavigation() {
         alert(error.message);
       }
     });
+
+  // Sign in form submit
+  document
+    .getElementById("signin-form")
+    ?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("signin-email").value;
+      const password = document.getElementById("signin-password").value;
+
+      try {
+        const { loginUser } = await import("../api/auth/login.js");
+        const { saveUser, saveToken } = await import(
+          "../storage/localStorage.js"
+        );
+
+        const { data } = await loginUser({ email, password });
+
+        // Save user data and token to localStorage
+        saveUser(data);
+        saveToken(data.accessToken);
+
+        alert("Login successful!");
+
+        // Close menu and reload page
+        profileMenu.classList.add("translate-x-full");
+        profileOverlay.classList.add("hidden");
+        window.location.reload();
+      } catch (error) {
+        alert(error.message);
+      }
+    });
 }
