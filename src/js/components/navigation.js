@@ -160,7 +160,7 @@ export function renderNavigation() {
   `;
 }
 
-export function initNavigation() {
+export async function initNavigation() {
   const menuToggle = document.getElementById("menu-toggle");
   const menuClose = document.getElementById("menu-close");
   const menuOverlay = document.getElementById("menu-overlay");
@@ -181,7 +181,33 @@ export function initNavigation() {
     profileRegisterView.classList.add("hidden");
   }
 
-  const isLoggedIn = false;
+  const { getUser, getToken } = await import("../storage/localStorage.js");
+  const user = getUser();
+  const token = getToken();
+  const isLoggedIn = !!(user && token);
+
+  if (isLoggedIn) {
+    profileMainView.innerHTML = `
+      <h2 class="font-heading text-2xl mb-6">Welcome, ${user.name}</h2>
+      <div class="space-y-4">
+        <a href="/profile/" class="block font-heading text-xl hover:text-button-gold transition-colors">My Profile</a>
+        <a href="/listings/create/" class="block font-heading text-xl hover:text-button-gold transition-colors">Create Listing</a>
+      </div>
+      <button id="logout-btn" class="btn-dark w-full mt-8">Logout</button>
+    `;
+
+    document
+      .getElementById("logout-btn")
+      ?.addEventListener("click", async () => {
+        const { clearUser, clearToken } = await import(
+          "../storage/localStorage.js"
+        );
+        clearUser();
+        clearToken();
+        alert("Logged out successfully!");
+        window.location.reload();
+      });
+  }
 
   // Show Sign In
   document.getElementById("show-signin")?.addEventListener("click", () => {
@@ -239,14 +265,10 @@ export function initNavigation() {
 
   // Profile Icon
   profileToggle?.addEventListener("click", () => {
-    if (isLoggedIn) {
-      window.location.href = "/profile.html";
-    } else {
-      profileMenu.classList.remove("translate-x-full");
-      profileOverlay.classList.remove("hidden");
-      hideAllProfileViews();
-      profileMainView.classList.remove("hidden");
-    }
+    profileMenu.classList.remove("translate-x-full");
+    profileOverlay.classList.remove("hidden");
+    hideAllProfileViews();
+    profileMainView.classList.remove("hidden");
   });
 
   profileClose?.addEventListener("click", () => {
