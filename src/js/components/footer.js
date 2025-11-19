@@ -28,28 +28,28 @@ export function renderFooter() {
           <div>
             <h3 class="font-heading text-xl mb-3">AUCTIONS</h3>
             <nav class="flex flex-col gap-2 font-sans">
-              <a href="/listings.html" class="hover:text-button-gold transition-colors">All listings</a>
-              <a href="/upcoming.html" class="hover:text-button-gold transition-colors">Upcoming Auctions</a>
-              <a href="/sell.html" class="hover:text-button-gold transition-colors">Sell With Us</a>
+              <a href="/listings/" class="hover:text-button-gold transition-colors">All listings</a>
+              <a href="#" class="hover:text-button-gold transition-colors">Upcoming Auctions</a>
+              <a href="#" class="hover:text-button-gold transition-colors">Sell With Us</a>
             </nav>
           </div>
 
           <div>
             <h3 class="font-heading text-xl mb-3">ABOUT</h3>
             <nav class="flex flex-col gap-2 font-sans">
-              <a href="/team.html" class="hover:text-button-gold transition-colors">Our Team</a>
-              <a href="/news.html" class="hover:text-button-gold transition-colors">Press & News</a>
-              <a href="/careers.html" class="hover:text-button-gold transition-colors">Careers</a>
+              <a href="#" class="hover:text-button-gold transition-colors">Our Team</a>
+              <a href="#" class="hover:text-button-gold transition-colors">Press & News</a>
+              <a href="#" class="hover:text-button-gold transition-colors">Careers</a>
             </nav>
           </div>
 
           <div>
             <h3 class="font-heading text-xl mb-3">SUPPORT</h3>
             <nav class="flex flex-col gap-2 font-sans">
-              <a href="/contact.html" class="hover:text-button-gold transition-colors">Contact Us</a>
-              <a href="/faqs.html" class="hover:text-button-gold transition-colors">FAQs</a>
-              <a href="/terms.html" class="hover:text-button-gold transition-colors">Terms & Conditions</a>
-              <a href="/privacy.html" class="hover:text-button-gold transition-colors">Privacy Policy</a>
+              <a href="/contact/" class="hover:text-button-gold transition-colors">Contact Us</a>
+              <a href="/faqs/" class="hover:text-button-gold transition-colors">FAQs</a>
+              <a href="#" class="hover:text-button-gold transition-colors">Terms & Conditions</a>
+              <a href="#" class="hover:text-button-gold transition-colors">Privacy Policy</a>
             </nav>
           </div>
 
