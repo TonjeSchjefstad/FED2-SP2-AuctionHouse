@@ -19,11 +19,47 @@
             All Listings
           </h1>
 
-          <!-- Add New Listing Button (visible when logged in) -->
           <div id="add-listing-container" class="hidden text-center mb-8">
             <a href="/listings/create/" class="btn-dark inline-block"
               >Add New Listing</a
             >
+          </div>
+
+          <div class="max-w-2xl mx-auto mb-8">
+            <div class="relative">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search Maison Ardéne"
+                style="
+                  width: 100%;
+                  padding: 12px 48px 12px 16px;
+                  border: 1px solid #d8d6d0;
+                  border-radius: 4px;
+                  background-color: #fefbf4;
+                  font-family: Lora, serif;
+                  font-size: 16px;
+                "
+              />
+              <button
+                id="search-btn"
+                class="absolute right-4 top-1/2 -translate-y-1/2 text-primary-text hover:text-button-gold"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div class="flex flex-wrap justify-center gap-2 mb-12">
