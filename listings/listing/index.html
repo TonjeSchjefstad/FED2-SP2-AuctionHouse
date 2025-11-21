@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <link rel="stylesheet" href="/src/css/style.css" />
+    <script type="module" src="/src/js/main.js"></script>
+    <script type="module" src="/src/js/pages/listing.js"></script>
+    <title>Listing - Maison Ardéne Auction House</title>
+  </head>
+
+  <body>
+    <header class="sticky top-0 z-50"></header>
+
+    <main class="bg-primary-bg">
+      <section class="py-8 md:py-12">
+        <div class="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-4">
+          <nav class="mb-6">
+            <a
+              href="/listings/"
+              class="font-sans text-sm hover:text-button-gold"
+              >All listings</a
+            >
+            <span class="mx-2">→</span>
+            <span id="breadcrumb-title" class="font-sans text-sm">Product</span>
+          </nav>
+
+          <div id="loading" class="text-center py-20">
+            <p class="font-sans text-lg">Loading listing...</p>
+          </div>
+
+          <div id="error-state" class="hidden text-center py-20">
+            <p class="font-sans text-lg text-red-600">Listing not found.</p>
+            <a href="/listings/" class="btn-dark inline-block mt-4"
+              >Back to Listings</a
+            >
+          </div>
+
+          <div id="listing-content" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+              <div>
+                <div class="mb-4">
+                  <img
+                    id="main-image"
+                    src=""
+                    alt=""
+                    class="w-full aspect-square object-cover rounded bg-card"
+                  />
+                </div>
+                <div
+                  id="thumbnail-gallery"
+                  class="grid grid-cols-4 gap-3"
+                ></div>
+              </div>
+
+              <div>
+                <div class="flex items-start justify-between mb-4">
+                  <h1
+                    id="listing-title"
+                    class="font-heading text-3xl md:text-4xl lg:text-5xl"
+                  ></h1>
+                  <button
+                    id="watchlist-btn"
+                    class="text-primary-text hover:text-button-gold transition-colors p-2"
+                    aria-label="Add to watchlist"
+                  >
+                    <svg
+                      class="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <p
+                  id="listing-description"
+                  class="font-sans text-base mb-6"
+                ></p>
+
+                <div class="mb-6">
+                  <a
+                    id="seller-link"
+                    href=""
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-button-dark text-button-dark-text rounded-full text-sm font-sans"
+                  >
+                    <span>Seller:</span>
+                    <span id="seller-name" class="font-bold"></span>
+                  </a>
+                </div>
+
+                <div class="border-b border-border mb-6"></div>
+
+                <div class="mb-2">
+                  <p class="font-sans font-bold text-sm">Current bid:</p>
+                  <p id="current-bid" class="font-heading text-3xl md:text-4xl">
+                    $ 0
+                  </p>
+                </div>
+
+                <p id="countdown" class="font-sans text-sm my-8">
+                  Ends in: Countdown
+                </p>
+
+                <div class="border-b border-border mb-6"></div>
+
+                <div id="bidding-section" class="hidden mb-8">
+                  <p id="user-credits" class="font-sans font-bold text-sm mb-4">
+                    Your available credit: $0
+                  </p>
+
+                  <input
+                    type="number"
+                    id="bid-input"
+                    placeholder="$0"
+                    class="w-full mb-3 text-center py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold"
+                  />
+                  <button id="place-bid-btn" class="btn-gold w-full">
+                    Place Bid
+                  </button>
+
+                  <p
+                    id="bid-error"
+                    class="hidden font-sans text-sm text-red-600 mt-2"
+                  ></p>
+                </div>
+
+                <div
+                  id="login-prompt"
+                  class="hidden mb-8 p-4 bg-card rounded border border-border"
+                >
+                  <p class="font-sans text-base mb-4">
+                    Sign in to place a bid on this listing.
+                  </p>
+                  <button id="open-signin" class="btn-dark">Sign In</button>
+                </div>
+
+                <div
+                  id="own-listing-message"
+                  class="hidden mb-8 p-4 bg-card rounded border border-border"
+                >
+                  <p class="font-sans text-base">
+                    This is your listing. You cannot bid on your own items.
+                  </p>
+                </div>
+
+                <div
+                  id="ended-message"
+                  class="hidden mb-8 p-4 bg-card rounded border border-border"
+                >
+                  <p class="font-sans text-base">This auction has ended.</p>
+                </div>
+
+                <div class="border-b border-border mb-6"></div>
+
+                <div>
+                  <h2 class="font-heading font-bold text-xl mb-4">Bids</h2>
+                  <div id="bid-history" class="space-y-0"></div>
+                  <p id="no-bids" class="hidden font-sans text-sm">
+                    No bids yet. Be the first to bid!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer></footer>
+  </body>
+</html>

@@ -1,0 +1,221 @@
+import { getListing } from "../api/auth/listings/getListings.js";
+import { placeBid } from "../api/auth/listings/placeBid.js";
+import { getUser, getToken } from "../storage/localStorage.js";
+
+const urlParams = new URLSearchParams(window.location.search);
+const listingId = urlParams.get("id");
+
+const loadingEl = document.getElementById("loading");
+const errorStateEl = document.getElementById("error-state");
+const listingContentEl = document.getElementById("listing-content");
+const breadcrumbTitleEl = document.getElementById("breadcrumb-title");
+const mainImageEl = document.getElementById("main-image");
+const thumbnailGalleryEl = document.getElementById("thumbnail-gallery");
+const listingTitleEl = document.getElementById("listing-title");
+const listingDescriptionEl = document.getElementById("listing-description");
+const sellerLinkEl = document.getElementById("seller-link");
+const sellerNameEl = document.getElementById("seller-name");
+const currentBidEl = document.getElementById("current-bid");
+const countdownEl = document.getElementById("countdown");
+const biddingSectionEl = document.getElementById("bidding-section");
+const loginPromptEl = document.getElementById("login-prompt");
+const ownListingMessageEl = document.getElementById("own-listing-message");
+const endedMessageEl = document.getElementById("ended-message");
+const userCreditsEl = document.getElementById("user-credits");
+const bidInputEl = document.getElementById("bid-input");
+const placeBidBtn = document.getElementById("place-bid-btn");
+const bidErrorEl = document.getElementById("bid-error");
+const bidHistoryEl = document.getElementById("bid-history");
+const noBidsEl = document.getElementById("no-bids");
+
+const user = getUser();
+const token = getToken();
+const isLoggedIn = !!(user && token);
+
+let currentListing = null;
+
+function getTimeRemaining(endsAt) {
+  const now = new Date();
+  const end = new Date(endsAt);
+  const diff = end - now;
+
+  if (diff <= 0) return "Ended";
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+  if (days > 0) return `Ends in: ${days}d ${hours}h`;
+  if (hours > 0) return `Ends in: ${hours}h ${minutes}m`;
+  return `Ends in: ${minutes}m`;
+}
+
+function hasEnded(endsAt) {
+  return new Date(endsAt) <= new Date();
+}
+
+function getCurrentBid(bids) {
+  if (!bids || bids.length === 0) return 0;
+  return Math.max(...bids.map((bid) => bid.amount));
+}
+
+function renderThumbnails(media) {
+  if (!media || media.length <= 1) {
+    thumbnailGalleryEl.innerHTML = "";
+    return;
+  }
+
+  thumbnailGalleryEl.innerHTML = media
+    .map(
+      (item, index) => `
+      <button class="thumbnail-btn aspect-square overflow-hidden rounded border-2 ${index === 0 ? "border-button-gold" : "border-transparent"} hover:border-button-gold transition-colors">
+        <img src="${item.url}" alt="${item.alt || ""}" class="w-full h-full object-cover" data-index="${index}">
+      </button>
+    `,
+    )
+    .join("");
+
+  thumbnailGalleryEl.querySelectorAll(".thumbnail-btn img").forEach((img) => {
+    img.addEventListener("click", () => {
+      const index = parseInt(img.dataset.index);
+      mainImageEl.src = media[index].url;
+      mainImageEl.alt = media[index].alt || "";
+
+      thumbnailGalleryEl
+        .querySelectorAll(".thumbnail-btn")
+        .forEach((btn, i) => {
+          if (i === index) {
+            btn.classList.add("ring-2", "ring-button-gold");
+          } else {
+            btn.classList.remove("ring-2", "ring-button-gold");
+          }
+        });
+    });
+  });
+}
+
+function renderBidHistory(bids) {
+  if (!bids || bids.length === 0) {
+    bidHistoryEl.innerHTML = "";
+    noBidsEl.classList.remove("hidden");
+    return;
+  }
+
+  noBidsEl.classList.add("hidden");
+
+  const sortedBids = [...bids].sort((a, b) => b.amount - a.amount);
+
+  bidHistoryEl.innerHTML = sortedBids
+    .map(
+      (bid) => `
+      <div class="flex justify-between items-center py-3 border-b border-border">
+        <span class="font-sans text-base">${bid.bidder.name}</span>
+        <span class="font-sans text-base">$${bid.amount.toLocaleString()}</span>
+      </div>
+    `,
+    )
+    .join("");
+}
+
+async function loadListing() {
+  if (!listingId) {
+    loadingEl.classList.add("hidden");
+    errorStateEl.classList.remove("hidden");
+    return;
+  }
+
+  try {
+    const { data } = await getListing(listingId);
+    currentListing = data;
+
+    loadingEl.classList.add("hidden");
+    listingContentEl.classList.remove("hidden");
+
+    document.title = `${data.title} - Maison Ardéne Auction House`;
+    breadcrumbTitleEl.textContent = data.title;
+
+    const mainImage = data.media?.[0];
+    mainImageEl.src = mainImage?.url || "/public/assets/placeholder.jpg";
+    mainImageEl.alt = mainImage?.alt || data.title;
+
+    renderThumbnails(data.media);
+
+    listingTitleEl.textContent = data.title;
+    listingDescriptionEl.textContent =
+      data.description || "No description provided.";
+
+    sellerNameEl.textContent = data.seller.name;
+    sellerLinkEl.href = `/profile/?name=${data.seller.name}`;
+
+    const currentBid = getCurrentBid(data.bids);
+    currentBidEl.textContent = `$ ${currentBid.toLocaleString()}`;
+
+    countdownEl.textContent = getTimeRemaining(data.endsAt);
+
+    renderBidHistory(data.bids);
+
+    const auctionEnded = hasEnded(data.endsAt);
+    const isOwnListing = isLoggedIn && user.name === data.seller.name;
+
+    if (auctionEnded) {
+      endedMessageEl.classList.remove("hidden");
+    } else if (isOwnListing) {
+      ownListingMessageEl.classList.remove("hidden");
+    } else if (isLoggedIn) {
+      biddingSectionEl.classList.remove("hidden");
+      userCreditsEl.textContent = `Your available credit: $${user.credits?.toLocaleString() || 0}`;
+      bidInputEl.placeholder = `$${currentBid + 1}`;
+      bidInputEl.min = currentBid + 1;
+    } else {
+      loginPromptEl.classList.remove("hidden");
+    }
+  } catch (error) {
+    loadingEl.classList.add("hidden");
+    errorStateEl.classList.remove("hidden");
+    console.error("Error loading listing:", error);
+  }
+}
+
+placeBidBtn?.addEventListener("click", async () => {
+  const amount = parseInt(bidInputEl.value);
+  const currentBid = getCurrentBid(currentListing.bids);
+
+  if (!amount || isNaN(amount)) {
+    bidErrorEl.textContent = "Please enter a valid bid amount.";
+    bidErrorEl.classList.remove("hidden");
+    return;
+  }
+
+  if (amount <= currentBid) {
+    bidErrorEl.textContent = `Bid must be higher than $${currentBid.toLocaleString()}`;
+    bidErrorEl.classList.remove("hidden");
+    return;
+  }
+
+  if (user.credits && amount > user.credits) {
+    bidErrorEl.textContent = `You don't have enough credits. Your balance: $${user.credits.toLocaleString()}`;
+    bidErrorEl.classList.remove("hidden");
+    return;
+  }
+
+  bidErrorEl.classList.add("hidden");
+  placeBidBtn.disabled = true;
+  placeBidBtn.textContent = "Placing...";
+
+  try {
+    await placeBid(listingId, amount);
+    alert("Bid placed successfully!");
+    window.location.reload();
+  } catch (error) {
+    bidErrorEl.textContent = error.message;
+    bidErrorEl.classList.remove("hidden");
+    placeBidBtn.disabled = false;
+    placeBidBtn.textContent = "Place Bid";
+  }
+});
+
+document.getElementById("open-signin")?.addEventListener("click", () => {
+  document.getElementById("profile-toggle")?.click();
+});
+
+loadListing();
