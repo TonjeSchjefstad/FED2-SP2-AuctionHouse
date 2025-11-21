@@ -20,6 +20,7 @@
     />
     <link rel="stylesheet" href="/src/css/style.css" />
     <script type="module" src="/src/js/main.js"></script>
+    <script type="module" src="/src/js/pages/homepage.js"></script>
     <title>Maison Ardéne Auction House</title>
   </head>
 
@@ -123,51 +124,14 @@
           </h2>
 
           <div
+            id="highlighted-listings-grid"
             class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
           >
-            <div class="product-card">
-              <img src="#" alt="Product" class="product-card-image" />
-              <div class="product-card-content">
-                <p class="product-card-time">Ends in 6h 23m</p>
-                <h3 class="product-card-title">Rolex Daytona Cosmograph</h3>
-                <p class="product-card-bid">CURRENT BID: $ 10,000</p>
-                <button class="btn-gold w-full">View</button>
-              </div>
-            </div>
-
-            <div class="product-card">
-              <img src="#" alt="Product" class="product-card-image" />
-              <div class="product-card-content">
-                <p class="product-card-time">Ends in 12h 45m</p>
-                <h3 class="product-card-title">Vintage Hermès Bag</h3>
-                <p class="product-card-bid">CURRENT BID: $ 8,500</p>
-                <button class="btn-gold w-full">View</button>
-              </div>
-            </div>
-
-            <div class="product-card">
-              <img src="#" alt="Product" class="product-card-image" />
-              <div class="product-card-content">
-                <p class="product-card-time">Ends in 3h 12m</p>
-                <h3 class="product-card-title">Art Deco Diamond Ring</h3>
-                <p class="product-card-bid">CURRENT BID: $ 15,200</p>
-                <button class="btn-gold w-full">View</button>
-              </div>
-            </div>
-
-            <div class="product-card">
-              <img src="#" alt="Product" class="product-card-image" />
-              <div class="product-card-content">
-                <p class="product-card-time">Ends in 8h 56m</p>
-                <h3 class="product-card-title">Antique Pocket Watch</h3>
-                <p class="product-card-bid">CURRENT BID: $ 5,750</p>
-                <button class="btn-gold w-full">View</button>
-              </div>
-            </div>
+            <!-- Listings will be loaded here -->
           </div>
 
           <div class="text-right">
-            <a href="/listings.html" class="font-heading text-lg text-right"
+            <a href="/listings/" class="font-heading text-lg text-right"
               >View All</a
             >
           </div>
