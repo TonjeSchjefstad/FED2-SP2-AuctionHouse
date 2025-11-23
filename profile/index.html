@@ -68,7 +68,7 @@
 
           <div class="flex justify-center mb-8">
             <div
-              class="inline-flex items-center gap-2 px-6 py-3 bg-button-gold text-button-gold-text rounded-full shadow-md"
+              class="inline-flex items-center gap-2 px-6 py-3 border border-button-gold bg-card text-button-gold-text rounded shadow-md"
             >
               <span class="font-heading font-bold text-lg"
                 >Credit: $<span id="profile-credits">0</span></span
@@ -87,21 +87,69 @@
 
           <div class="border-b border-border mb-6"></div>
 
-          <div>
-            <h2 class="font-heading text-2xl md:text-3xl mb-8">My Listings</h2>
+          <div class="mb-8">
+            <!-- Mobile Dropdown -->
+            <div class="block sm:hidden">
+              <select
+                id="filter-dropdown"
+                class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
+              >
+                <option value="active">Active Listings</option>
+                <option value="previous">Previous Listings</option>
+                <option value="bids">Active Bids</option>
+                <option value="wins">Listings Won</option>
+                <option value="watchlist">Watchlist</option>
+              </select>
+            </div>
 
+            <!-- Desktop Tabs -->
+            <div
+              class="hidden sm:flex flex-wrap gap-2 justify-center"
+              id="filter-tabs"
+            >
+              <button
+                class="filter-tab py-3 px-6 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all whitespace-nowrap hover:border-button-gold"
+                data-filter="active"
+              >
+                Active Listings
+              </button>
+              <button
+                class="filter-tab py-3 px-6 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all whitespace-nowrap hover:border-button-gold"
+                data-filter="previous"
+              >
+                Previous Listings
+              </button>
+              <button
+                class="filter-tab py-3 px-6 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all whitespace-nowrap hover:border-button-gold"
+                data-filter="bids"
+              >
+                Active Bids
+              </button>
+              <button
+                class="filter-tab py-3 px-6 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all whitespace-nowrap hover:border-button-gold"
+                data-filter="wins"
+              >
+                Listings Won
+              </button>
+              <button
+                class="filter-tab py-3 px-6 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all whitespace-nowrap hover:border-button-gold"
+                data-filter="watchlist"
+              >
+                Watchlist
+              </button>
+            </div>
+          </div>
+
+          <div class="pb-12">
             <div
               id="listings-grid"
               class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
             ></div>
 
             <div id="empty-state" class="hidden text-center py-12">
-              <p class="font-sans text-lg mb-4">
-                You haven't created any listings yet.
+              <p id="empty-message" class="font-sans text-lg mb-6">
+                No listings found.
               </p>
-              <a href="/listings/create/" class="btn-gold inline-block"
-                >Create Your First Listing</a
-              >
             </div>
           </div>
         </div>

@@ -45,3 +45,34 @@ export async function getProfile(
     throw error;
   }
 }
+
+export async function getProfileBids(name) {
+  try {
+    const url = `${API_PROFILES}/${name}/bids?_listings=true`;
+
+    const token = getToken();
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      headers["X-Noroff-API-Key"] = API_KEY;
+    }
+
+    const response = await fetch(url, { headers });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      const errorMessage =
+        errorData.errors?.[0]?.message ||
+        `Failed to fetch bids: ${response.status}`;
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching profile bids:", error);
+    throw error;
+  }
+}
