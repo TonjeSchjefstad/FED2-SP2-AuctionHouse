@@ -1,5 +1,7 @@
 import { getProfile, getProfileBids } from "../api/profiles/getProfile.js";
 import { getUser, getToken } from "../storage/localStorage.js";
+import { getListing } from "../api/auth/listings/getListings.js";
+import { getWatchlist } from "../storage/watchlist.js";
 
 const user = getUser();
 const token = getToken();
@@ -25,6 +27,7 @@ const filterDropdown = document.getElementById("filter-dropdown");
 let profileData = null;
 let allListings = [];
 let userBids = [];
+let watchlistCache = null;
 let currentFilter = "active";
 
 function getTimeRemaining(endsAt) {
@@ -123,7 +126,11 @@ function renderListings() {
       filteredListings = profileData.wins || [];
       break;
     case "watchlist":
-      filteredListings = [];
+      if (watchlistCache) {
+        filteredListings = watchlistCache;
+      } else {
+        filteredListings = [];
+      }
       break;
   }
 
@@ -165,6 +172,22 @@ filterDropdown.addEventListener("change", (e) => {
   renderListings();
 });
 
+async function loadWatchlistItems() {
+  const watchlistIds = getWatchlist();
+  const watchlistItems = [];
+
+  for (const id of watchlistIds) {
+    try {
+      const { data } = await getListing(id);
+      watchlistItems.push(data);
+    } catch (error) {
+      console.error(`Failed to load listing ${id}:`, error);
+    }
+  }
+
+  return watchlistItems;
+}
+
 async function loadProfile() {
   try {
     const { data } = await getProfile(user.name, true, true);
@@ -177,6 +200,13 @@ async function loadProfile() {
     } catch (error) {
       console.error("Error fetching bids:", error);
       userBids = [];
+    }
+
+    try {
+      watchlistCache = await loadWatchlistItems();
+    } catch (error) {
+      console.error("Error loading watchlist:", error);
+      watchlistCache = [];
     }
 
     loadingEl.classList.add("hidden");

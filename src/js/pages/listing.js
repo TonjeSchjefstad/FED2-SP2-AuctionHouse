@@ -1,6 +1,7 @@
 import { getListing } from "../api/auth/listings/getListings.js";
 import { placeBid } from "../api/auth/listings/placeBid.js";
 import { getUser, getToken } from "../storage/localStorage.js";
+import { toggleWatchlist, isInWatchlist } from "../storage/watchlist.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
@@ -27,6 +28,7 @@ const placeBidBtn = document.getElementById("place-bid-btn");
 const bidErrorEl = document.getElementById("bid-error");
 const bidHistoryEl = document.getElementById("bid-history");
 const noBidsEl = document.getElementById("no-bids");
+const watchlistBtn = document.getElementById("watchlist-btn");
 
 const user = getUser();
 const token = getToken();
@@ -169,6 +171,9 @@ async function loadListing() {
     } else {
       loginPromptEl.classList.remove("hidden");
     }
+
+    const isWatchlisted = isInWatchlist(listingId);
+    updateWatchlistButton(isWatchlisted);
   } catch (error) {
     loadingEl.classList.add("hidden");
     errorStateEl.classList.remove("hidden");
@@ -216,6 +221,25 @@ placeBidBtn?.addEventListener("click", async () => {
 
 document.getElementById("open-signin")?.addEventListener("click", () => {
   document.getElementById("profile-toggle")?.click();
+});
+
+function updateWatchlistButton(isWatchlisted) {
+  const svg = watchlistBtn.querySelector("svg");
+  if (isWatchlisted) {
+    svg.innerHTML = `
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" fill="currentColor" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+    `;
+  } else {
+    svg.innerHTML = `
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+    `;
+  }
+}
+
+watchlistBtn.addEventListener("click", () => {
+  const listingId = new URLSearchParams(window.location.search).get("id");
+  const isWatchlisted = toggleWatchlist(listingId);
+  updateWatchlistButton(isWatchlisted);
 });
 
 loadListing();
