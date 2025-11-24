@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/css/style.css" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/public/assets/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/public/assets/favicon-16x16.png"
+    />
+    <script type="module" src="/src/js/main.js"></script>
+    <script type="module" src="/src/js/pages/editListing.js"></script>
+    <title>Edit Listing - Maison Ardéne Auction House</title>
+  </head>
+
+  <body>
+    <header class="sticky top-0 z-50"></header>
+
+    <main class="bg-primary-bg">
+      <div id="loading" class="text-center py-20">
+        <p class="font-sans text-lg">Loading listing...</p>
+      </div>
+
+      <section id="edit-content" class="hidden py-12 md:py-20">
+        <div class="max-w-3xl mx-auto px-6 md:px-8">
+          <a
+            id="back-link"
+            href="#"
+            class="inline-flex items-center gap-2 text-primary-text hover:text-button-gold mb-6 transition-colors"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to Listing
+          </a>
+
+          <h1 class="font-heading text-4xl md:text-5xl text-center mb-12">
+            Edit Listing
+          </h1>
+
+          <form id="edit-listing-form" class="space-y-6">
+            <div>
+              <label for="title" class="block font-sans text-base mb-2"
+                >Title <span class="text-red-600">*</span></label
+              >
+              <input
+                type="text"
+                id="title"
+                name="title"
+                required
+                placeholder="Enter listing title"
+                class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold"
+              />
+            </div>
+
+            <div>
+              <label for="description" class="block font-sans text-base mb-2"
+                >Description of the Item</label
+              >
+              <textarea
+                id="description"
+                name="description"
+                rows="5"
+                placeholder="Enter detailed description"
+                class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold resize-none"
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block font-sans text-base mb-2">Images</label>
+              <p class="font-sans text-sm text-gray-600 mb-3">
+                Add up to 3 image URLs
+              </p>
+
+              <div class="space-y-3">
+                <input
+                  type="url"
+                  id="image-url-1"
+                  name="imageUrl1"
+                  placeholder="https://example.com/image1.jpg"
+                  class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold"
+                />
+                <input
+                  type="url"
+                  id="image-url-2"
+                  name="imageUrl2"
+                  placeholder="https://example.com/image2.jpg"
+                  class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold"
+                />
+                <input
+                  type="url"
+                  id="image-url-3"
+                  name="imageUrl3"
+                  placeholder="https://example.com/image3.jpg"
+                  class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label for="tags" class="block font-sans text-base mb-2"
+                >Tags/Categories</label
+              >
+              <p class="font-sans text-sm text-gray-600 mb-3">
+                Separate tags with commas (e.g., watches, luxury, rolex)
+              </p>
+              <input
+                type="text"
+                id="tags"
+                name="tags"
+                placeholder="watches, luxury, vintage"
+                class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold"
+              />
+            </div>
+
+            <div>
+              <label for="endsAt" class="block font-sans text-base mb-2"
+                >Auction End Time</label
+              >
+              <p class="font-sans text-sm text-gray-600 mb-3">
+                End time cannot be changed after listing is created
+              </p>
+              <input
+                type="text"
+                id="endsAt"
+                name="endsAt"
+                readonly
+                disabled
+                class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-gray-200 font-sans text-base cursor-not-allowed"
+              />
+            </div>
+
+            <div
+              id="error-message"
+              class="hidden p-4 bg-red-100 border border-red-300 rounded"
+            >
+              <p class="font-sans text-sm text-red-600"></p>
+            </div>
+
+            <button type="submit" id="submit-btn" class="btn-dark w-full">
+              Save Changes
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer></footer>
+  </body>
+</html>
