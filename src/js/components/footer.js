@@ -47,7 +47,7 @@ export function renderFooter() {
             <h3 class="font-heading text-xl mb-3">SUPPORT</h3>
             <nav class="flex flex-col gap-2 font-sans">
               <a href="/contact/" class="hover:text-button-gold transition-colors">Contact Us</a>
-              <a href="/faqs/" class="hover:text-button-gold transition-colors">FAQs</a>
+              <a href="/faq/" class="hover:text-button-gold transition-colors">FAQs</a>
               <a href="#" class="hover:text-button-gold transition-colors">Terms & Conditions</a>
               <a href="#" class="hover:text-button-gold transition-colors">Privacy Policy</a>
             </nav>

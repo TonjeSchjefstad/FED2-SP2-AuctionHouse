@@ -1,4 +1,4 @@
-import { getProfile } from "../api/profiles/getProfile.js";
+import { getProfile, getProfileBids } from "../api/profiles/getProfile.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 
 const user = getUser();
@@ -18,6 +18,14 @@ const profileBioEl = document.getElementById("profile-bio");
 const profileCreditsEl = document.getElementById("profile-credits");
 const listingsGridEl = document.getElementById("listings-grid");
 const emptyStateEl = document.getElementById("empty-state");
+const emptyMessageEl = document.getElementById("empty-message");
+const filterTabs = document.querySelectorAll(".filter-tab");
+const filterDropdown = document.getElementById("filter-dropdown");
+
+let profileData = null;
+let allListings = [];
+let userBids = [];
+let currentFilter = "active";
 
 function getTimeRemaining(endsAt) {
   const now = new Date();
@@ -33,6 +41,10 @@ function getTimeRemaining(endsAt) {
   if (days > 0) return `Ends in ${days}d ${hours}h`;
   if (hours > 0) return `Ends in ${hours}h ${minutes}m`;
   return `Ends in ${minutes}m`;
+}
+
+function hasEnded(endsAt) {
+  return new Date(endsAt) <= new Date();
 }
 
 function getCurrentBid(bids) {
@@ -63,9 +75,109 @@ function renderListingCard(listing) {
   `;
 }
 
+function getEmptyMessage(filter) {
+  switch (filter) {
+    case "active":
+      return "You don't have any active listings.";
+    case "previous":
+      return "You don't have any previous listings.";
+    case "bids":
+      return "You haven't placed any bids yet.";
+    case "wins":
+      return "You haven't won any auctions yet.";
+    case "watchlist":
+      return "Your watchlist is empty.";
+    default:
+      return "No listings found.";
+  }
+}
+
+function renderListings() {
+  let filteredListings = [];
+
+  switch (currentFilter) {
+    case "active":
+      filteredListings = allListings.filter(
+        (listing) => !hasEnded(listing.endsAt),
+      );
+      break;
+    case "previous":
+      filteredListings = allListings.filter((listing) =>
+        hasEnded(listing.endsAt),
+      );
+      break;
+    case "bids":
+      const listingIds = new Set(); // eslint-disable-line
+      filteredListings = userBids
+        .filter((bid) => {
+          if (bid.listing && !listingIds.has(bid.listing.id)) {
+            listingIds.add(bid.listing.id);
+            return true;
+          }
+          return false;
+        })
+        .map((bid) => bid.listing)
+        .filter((listing) => !hasEnded(listing.endsAt));
+      break;
+    case "wins":
+      filteredListings = profileData.wins || [];
+      break;
+    case "watchlist":
+      filteredListings = [];
+      break;
+  }
+
+  if (filteredListings.length === 0) {
+    listingsGridEl.innerHTML = "";
+    emptyMessageEl.textContent = getEmptyMessage(currentFilter);
+    emptyStateEl.classList.remove("hidden");
+  } else {
+    emptyStateEl.classList.add("hidden");
+    listingsGridEl.innerHTML = filteredListings.map(renderListingCard).join("");
+  }
+}
+
+filterTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    filterTabs.forEach((t) => {
+      t.classList.remove(
+        "bg-button-dark",
+        "text-button-dark-text",
+        "border-button-dark",
+      );
+      t.classList.add("bg-card", "border-border");
+    });
+
+    tab.classList.remove("bg-card", "border-border");
+    tab.classList.add(
+      "bg-button-dark",
+      "text-button-dark-text",
+      "border-button-dark",
+    );
+
+    currentFilter = tab.dataset.filter;
+    renderListings();
+  });
+});
+
+filterDropdown.addEventListener("change", (e) => {
+  currentFilter = e.target.value;
+  renderListings();
+});
+
 async function loadProfile() {
   try {
-    const { data } = await getProfile(user.name, true, false);
+    const { data } = await getProfile(user.name, true, true);
+    profileData = data;
+    allListings = data.listings || [];
+
+    try {
+      const bidsData = await getProfileBids(user.name);
+      userBids = bidsData.data || [];
+    } catch (error) {
+      console.error("Error fetching bids:", error);
+      userBids = [];
+    }
 
     loadingEl.classList.add("hidden");
     profileContentEl.classList.remove("hidden");
@@ -75,14 +187,12 @@ async function loadProfile() {
       "https://images.unsplash.com/photo-1557683316-973673baf926?w=1500";
     bannerImageEl.src = bannerUrl;
     bannerImageEl.alt = data.banner?.alt || "Profile banner";
-    bannerImageEl.onload = () => {};
 
     const avatarUrl =
       data.avatar?.url ||
       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400";
     avatarImageEl.src = avatarUrl;
     avatarImageEl.alt = data.avatar?.alt || data.name;
-    avatarImageEl.onload = () => {};
 
     profileNameEl.textContent = data.name;
     profileBioEl.textContent = data.bio || "No bio provided.";
@@ -90,14 +200,16 @@ async function loadProfile() {
 
     document.title = `${data.name} - Maison Ardéne Auction House`;
 
-    const listings = data.listings || [];
-    if (listings.length === 0) {
-      listingsGridEl.classList.add("hidden");
-      emptyStateEl.classList.remove("hidden");
-    } else {
-      emptyStateEl.classList.add("hidden");
-      listingsGridEl.innerHTML = listings.map(renderListingCard).join("");
+    if (filterTabs.length > 0) {
+      filterTabs[0].classList.remove("bg-card", "border-border");
+      filterTabs[0].classList.add(
+        "bg-button-dark",
+        "text-button-dark-text",
+        "border-button-dark",
+      );
     }
+
+    renderListings();
   } catch (error) {
     loadingEl.classList.add("hidden");
     alert("Failed to load profile: " + error.message);
