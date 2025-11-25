@@ -154,6 +154,36 @@
           </div>
         </div>
       </section>
+
+      <div
+        id="delete-modal"
+        class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      >
+        <div class="bg-primary-bg rounded-lg max-w-md w-full p-6">
+          <h2 class="font-heading text-2xl mb-4">Delete Listing?</h2>
+          <p class="font-sans text-base mb-6">
+            Are you sure you want to delete "<span
+              id="delete-listing-title"
+            ></span
+            >"?
+          </p>
+
+          <div class="flex gap-3">
+            <button
+              id="cancel-delete-btn"
+              class="flex-1 py-3 px-6 border border-border rounded bg-card font-sans text-base hover:border-button-gold transition-colors"
+            >
+              No
+            </button>
+            <button
+              id="confirm-delete-btn"
+              class="flex-1 py-3 px-6 bg-red-600 text-white rounded font-sans text-base hover:bg-red-700 transition-colors"
+            >
+              Yes
+            </button>
+          </div>
+        </div>
+      </div>
     </main>
 
     <footer></footer>

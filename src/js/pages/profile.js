@@ -2,6 +2,7 @@ import { getProfile, getProfileBids } from "../api/profiles/getProfile.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 import { getListing } from "../api/auth/listings/getListings.js";
 import { getWatchlist } from "../storage/watchlist.js";
+import { deleteListing } from "../api/auth/listings/deleteListing.js";
 
 const user = getUser();
 const token = getToken();
@@ -23,12 +24,17 @@ const emptyStateEl = document.getElementById("empty-state");
 const emptyMessageEl = document.getElementById("empty-message");
 const filterTabs = document.querySelectorAll(".filter-tab");
 const filterDropdown = document.getElementById("filter-dropdown");
+const deleteModal = document.getElementById("delete-modal");
+const deleteListingTitle = document.getElementById("delete-listing-title");
+const cancelDeleteBtn = document.getElementById("cancel-delete-btn");
+const confirmDeleteBtn = document.getElementById("confirm-delete-btn");
 
 let profileData = null;
 let allListings = [];
 let userBids = [];
 let watchlistCache = null;
 let currentFilter = "active";
+let listingToDelete = null;
 
 function getTimeRemaining(endsAt) {
   const now = new Date();
@@ -63,8 +69,47 @@ function renderListingCard(listing) {
     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800";
   const imageAlt = listing.media?.[0]?.alt || listing.title;
 
+  const isOwnProfile = profileData && profileData.name === user.name;
+  const showActions =
+    isOwnProfile &&
+    (currentFilter === "active" || currentFilter === "previous");
+
   return `
-    <div class="product-card">
+    <div class="product-card relative">
+      ${
+        showActions
+          ? `
+        <div class="absolute top-4 right-4 z-10">
+          <button class="action-menu-btn p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors" data-listing-id="${listing.id}" data-listing-title="${listing.title}">
+            <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+            </svg>
+          </button>
+          <div class="action-menu hidden absolute top-12 right-0 bg-white rounded-lg shadow-lg border border-border overflow-hidden min-w-[150px]">
+            <a href="/listings/edit/?id=${listing.id}" class="block px-4 py-3 font-sans text-sm hover:bg-gray-100 transition-colors border-b border-border">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Edit Listing
+              </span>
+            </a>
+            <button class="delete-listing-btn w-full px-4 py-3 font-sans text-sm text-left text-red-600 hover:bg-red-50 transition-colors border-b border-border" data-listing-id="${listing.id}" data-listing-title="${listing.title}">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Delete Listing
+              </span>
+            </button>
+            <button class="cancel-menu-btn w-full px-4 py-3 font-sans text-sm text-left hover:bg-gray-100 transition-colors">
+              Cancel
+            </button>
+          </div>
+        </div>
+      `
+          : ""
+      }
       <a href="/listings/listing/?id=${listing.id}">
         <img src="${imageUrl}" alt="${imageAlt}" class="product-card-image">
       </a>
@@ -110,17 +155,13 @@ function renderListings() {
       );
       break;
     case "bids":
-      const listingIds = new Set(); // eslint-disable-line
-      filteredListings = userBids
-        .filter((bid) => {
-          if (bid.listing && !listingIds.has(bid.listing.id)) {
-            listingIds.add(bid.listing.id);
-            return true;
-          }
-          return false;
-        })
-        .map((bid) => bid.listing)
-        .filter((listing) => !hasEnded(listing.endsAt));
+      if (window.bidListingsCache) {
+        filteredListings = window.bidListingsCache.filter(
+          (listing) => !hasEnded(listing.endsAt),
+        );
+      } else {
+        filteredListings = [];
+      }
       break;
     case "wins":
       filteredListings = profileData.wins || [];
@@ -143,6 +184,107 @@ function renderListings() {
     listingsGridEl.innerHTML = filteredListings.map(renderListingCard).join("");
   }
 }
+
+document.addEventListener("click", (e) => {
+  if (
+    !e.target.closest(".action-menu-btn") &&
+    !e.target.closest(".action-menu")
+  ) {
+    document.querySelectorAll(".action-menu").forEach((menu) => {
+      menu.classList.add("hidden");
+    });
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".action-menu-btn");
+  if (btn) {
+    e.stopPropagation();
+    const menu = btn.nextElementSibling;
+    const allMenus = document.querySelectorAll(".action-menu");
+
+    allMenus.forEach((m) => {
+      if (m !== menu) {
+        m.classList.add("hidden");
+      }
+    });
+
+    menu.classList.toggle("hidden");
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const deleteBtn = e.target.closest(".delete-listing-btn");
+  if (deleteBtn) {
+    e.stopPropagation();
+    const listingId = deleteBtn.dataset.listingId;
+    const listingTitle = deleteBtn.dataset.listingTitle;
+    openDeleteModal(listingId, listingTitle);
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const cancelBtn = e.target.closest(".cancel-menu-btn");
+  if (cancelBtn) {
+    e.stopPropagation();
+    document.querySelectorAll(".action-menu").forEach((menu) => {
+      menu.classList.add("hidden");
+    });
+  }
+});
+
+function openDeleteModal(listingId, listingTitle) {
+  listingToDelete = listingId;
+  deleteListingTitle.textContent = listingTitle;
+  deleteModal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+
+function closeDeleteModal() {
+  listingToDelete = null;
+  deleteModal.classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+async function handleDelete() {
+  if (!listingToDelete) return;
+
+  confirmDeleteBtn.disabled = true;
+  confirmDeleteBtn.textContent = "Deleting...";
+
+  try {
+    await deleteListing(listingToDelete);
+
+    allListings = allListings.filter(
+      (listing) => listing.id !== listingToDelete,
+    );
+
+    if (profileData && profileData.listings) {
+      profileData.listings = profileData.listings.filter(
+        (listing) => listing.id !== listingToDelete,
+      );
+    }
+
+    closeDeleteModal();
+    renderListings();
+
+    alert("Listing deleted successfully!");
+  } catch (error) {
+    alert("Failed to delete listing: " + error.message);
+    confirmDeleteBtn.disabled = false;
+    confirmDeleteBtn.textContent = "Yes";
+  }
+}
+
+cancelDeleteBtn.addEventListener("click", closeDeleteModal);
+
+confirmDeleteBtn.addEventListener("click", handleDelete);
+
+deleteModal.addEventListener("click", (e) => {
+  if (e.target === deleteModal) {
+    closeDeleteModal();
+  }
+});
 
 filterTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
@@ -192,11 +334,41 @@ async function loadProfile() {
   try {
     const { data } = await getProfile(user.name, true, true);
     profileData = data;
-    allListings = data.listings || [];
+    try {
+      const listingsResponse = await fetch(
+        `https://v2.api.noroff.dev/auction/profiles/${user.name}/listings?_bids=true`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "X-Noroff-API-Key": "db7225e1-9983-4e59-a55d-6f2cb506417d",
+          },
+        },
+      );
+      const listingsData = await listingsResponse.json();
+      allListings = listingsData.data || [];
+    } catch (error) {
+      console.error("Error fetching listings:", error);
+      allListings = [];
+    }
 
     try {
       const bidsData = await getProfileBids(user.name);
       userBids = bidsData.data || [];
+
+      const bidListingIds = [
+        ...new Set(userBids.map((bid) => bid.listing?.id).filter(Boolean)),
+      ];
+      const bidListingsWithBids = [];
+      for (const id of bidListingIds) {
+        try {
+          const { data } = await getListing(id);
+          bidListingsWithBids.push(data);
+        } catch (error) {
+          console.error(`Failed to load listing ${id}:`, error);
+        }
+      }
+
+      window.bidListingsCache = bidListingsWithBids;
     } catch (error) {
       console.error("Error fetching bids:", error);
       userBids = [];

@@ -1,35 +1,33 @@
 import { API_LISTINGS, API_KEY } from "../../constants.js";
 import { getToken } from "../../../storage/localStorage.js";
 
-export async function updateListing(listingId, listingData) {
+export async function deleteListing(listingId) {
   try {
     const token = getToken();
 
     if (!token) {
-      throw new Error("You must be logged in to update a listing");
+      throw new Error("You must be logged in to delete a listing");
     }
 
     const response = await fetch(`${API_LISTINGS}/${listingId}`, {
-      method: "PUT",
+      method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
         "X-Noroff-API-Key": API_KEY,
       },
-      body: JSON.stringify(listingData),
     });
 
     if (!response.ok) {
       const errorData = await response.json();
       const errorMessage =
         errorData.errors?.[0]?.message ||
-        `Failed to update listing: ${response.status}`;
+        `Failed to delete listing: ${response.status}`;
       throw new Error(errorMessage);
     }
 
-    return await response.json();
+    return;
   } catch (error) {
-    console.error("Error updating listing:", error);
+    console.error("Error deleting listing:", error);
     throw error;
   }
 }

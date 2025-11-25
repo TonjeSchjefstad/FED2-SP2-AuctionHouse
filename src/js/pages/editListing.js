@@ -1,5 +1,5 @@
-import { getListing } from "../api/listings/getListings.js";
-import { updateListing } from "../api/listings/updateListing.js";
+import { getListing } from "../api/auth/listings/getListings.js";
+import { updateListing } from "../api/auth/listings/updateListing.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 
 const urlParams = new URLSearchParams(window.location.search);
