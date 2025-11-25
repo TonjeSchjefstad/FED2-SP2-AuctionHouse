@@ -7,7 +7,17 @@ import { deleteListing } from "../api/auth/listings/deleteListing.js";
 const user = getUser();
 const token = getToken();
 
-if (!user || !token) {
+const urlParams = new URLSearchParams(window.location.search);
+const profileName = urlParams.get("name") || user?.name;
+
+if (!profileName) {
+  alert("No profile specified.");
+  window.location.href = "/";
+}
+
+const isOwnProfile = user && user.name === profileName;
+
+if (isOwnProfile && (!user || !token)) {
   alert("Please sign in to view your profile.");
   window.location.href = "/";
 }
@@ -69,7 +79,6 @@ function renderListingCard(listing) {
     "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800";
   const imageAlt = listing.media?.[0]?.alt || listing.title;
 
-  const isOwnProfile = profileData && profileData.name === user.name;
   const showActions =
     isOwnProfile &&
     (currentFilter === "active" || currentFilter === "previous");
@@ -332,14 +341,14 @@ async function loadWatchlistItems() {
 
 async function loadProfile() {
   try {
-    const { data } = await getProfile(user.name, true, true);
+    const { data } = await getProfile(profileName, false, true);
     profileData = data;
     try {
       const listingsResponse = await fetch(
-        `https://v2.api.noroff.dev/auction/profiles/${user.name}/listings?_bids=true`,
+        `https://v2.api.noroff.dev/auction/profiles/${profileName}/listings?_bids=true`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: token ? `Bearer ${token}` : "",
             "X-Noroff-API-Key": "db7225e1-9983-4e59-a55d-6f2cb506417d",
           },
         },
@@ -352,7 +361,7 @@ async function loadProfile() {
     }
 
     try {
-      const bidsData = await getProfileBids(user.name);
+      const bidsData = await getProfileBids(profileName);
       userBids = bidsData.data || [];
 
       const bidListingIds = [
@@ -409,6 +418,38 @@ async function loadProfile() {
         "text-button-dark-text",
         "border-button-dark",
       );
+    }
+
+    const updateProfileBtn = document.querySelector('a[href="/profile/edit/"]');
+    const addListingBtn = document.querySelector('a[href="/listings/create/"]');
+    const creditDisplay = document.querySelector(
+      ".inline-flex.items-center.gap-2.px-6.py-3",
+    );
+
+    if (!isOwnProfile) {
+      if (updateProfileBtn) updateProfileBtn.style.display = "none";
+      if (addListingBtn) addListingBtn.style.display = "none";
+      if (creditDisplay) creditDisplay.style.display = "none";
+
+      document
+        .querySelectorAll(
+          '[data-filter="previous"], [data-filter="bids"], [data-filter="wins"], [data-filter="watchlist"]',
+        )
+        .forEach((tab) => {
+          tab.style.display = "none";
+        });
+
+      const dropdown = document.getElementById("filter-dropdown");
+      if (dropdown) {
+        dropdown.querySelector('option[value="previous"]').style.display =
+          "none";
+        dropdown.querySelector('option[value="bids"]').style.display = "none";
+        dropdown.querySelector('option[value="wins"]').style.display = "none";
+        dropdown.querySelector('option[value="watchlist"]').style.display =
+          "none";
+      }
+
+      currentFilter = "active";
     }
 
     renderListings();
