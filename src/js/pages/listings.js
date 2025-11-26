@@ -9,6 +9,12 @@ let currentTag = "";
 let currentSearch = "";
 let currentSort = "newest";
 
+const urlParams = new URLSearchParams(window.location.search);
+const urlCategory = urlParams.get("category");
+if (urlCategory) {
+  currentTag = urlCategory;
+}
+
 const listingsGrid = document.getElementById("listings-grid");
 const loadingEl = document.getElementById("loading");
 const emptyStateEl = document.getElementById("empty-state");
@@ -17,7 +23,11 @@ const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
 const fabBtn = document.getElementById("fab-add-listing");
 const sortSelect = document.getElementById("sort-select");
+
 const categoryDropdown = document.getElementById("category-dropdown");
+if (urlCategory && categoryDropdown) {
+  categoryDropdown.value = urlCategory;
+}
 
 const user = getUser();
 const token = getToken();
