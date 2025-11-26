@@ -128,6 +128,20 @@ export function renderNavigation() {
           
           <form id="register-form" class="space-y-4">
             <div>
+              <label for="register-name" class="block font-sans text-base mb-2">Username</label>
+              <input 
+                type="text" 
+                id="register-name" 
+                required
+                pattern="[a-zA-Z0-9_]+"
+                title="Only letters, numbers, and underscores allowed"
+                placeholder="username"
+                style="width: 100%; padding: 12px 16px; border: 1px solid #D8D6D0; border-radius: 4px; background-color: #FEFBF4; font-family: Lora, serif; font-size: 16px;"
+              >
+              <p class="text-xs text-secondary-text mt-1">Only letters, numbers, and underscores. No spaces.</p>
+            </div>
+            
+            <div>
               <label for="register-email" class="block font-sans text-base mb-2">Email</label>
               <input 
                 type="email" 
@@ -144,7 +158,8 @@ export function renderNavigation() {
                 type="password" 
                 id="register-password" 
                 required
-                placeholder="Password"
+                minlength="8"
+                placeholder="Password (min 8 characters)"
                 style="width: 100%; padding: 12px 16px; border: 1px solid #D8D6D0; border-radius: 4px; background-color: #FEFBF4; font-family: Lora, serif; font-size: 16px;"
               >
             </div>
@@ -188,7 +203,7 @@ export async function initNavigation() {
 
   if (isLoggedIn) {
     profileMainView.innerHTML = `
-      <h2 class="font-heading text-2xl mb-6">Welcome, ${user.name}</h2>
+      <h2 class="font-heading font-bold text-2xl mb-6">Welcome ${user.name}</h2>
       <div class="space-y-4">
         <a href="/profile/" class="block font-heading text-xl hover:text-button-gold transition-colors">My Profile</a>
         <a href="/listings/create/" class="block font-heading text-xl hover:text-button-gold transition-colors">Create Listing</a>
@@ -209,19 +224,16 @@ export async function initNavigation() {
       });
   }
 
-  // Show Sign In
   document.getElementById("show-signin")?.addEventListener("click", () => {
     hideAllProfileViews();
     profileSigninView.classList.remove("hidden");
   });
 
-  // Show Register
   document.getElementById("show-register")?.addEventListener("click", () => {
     hideAllProfileViews();
     profileRegisterView.classList.remove("hidden");
   });
 
-  // Back to Main
   document
     .getElementById("back-to-profile-main-signin")
     ?.addEventListener("click", () => {
@@ -236,7 +248,6 @@ export async function initNavigation() {
       profileMainView.classList.remove("hidden");
     });
 
-  // Switch between Sign In and Register
   document.getElementById("goto-register")?.addEventListener("click", () => {
     hideAllProfileViews();
     profileRegisterView.classList.remove("hidden");
@@ -247,7 +258,6 @@ export async function initNavigation() {
     profileSigninView.classList.remove("hidden");
   });
 
-  // Mobile Menu Navigation
   menuToggle?.addEventListener("click", () => {
     mobileMenu.classList.remove("-translate-x-full");
     menuOverlay.classList.remove("hidden");
@@ -263,7 +273,6 @@ export async function initNavigation() {
     menuOverlay.classList.add("hidden");
   });
 
-  // Profile Icon
   profileToggle?.addEventListener("click", () => {
     profileMenu.classList.remove("translate-x-full");
     profileOverlay.classList.remove("hidden");
@@ -281,16 +290,29 @@ export async function initNavigation() {
     profileOverlay.classList.add("hidden");
   });
 
-  // Register form submit
   document
     .getElementById("register-form")
     ?.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const email = document.getElementById("register-email").value;
+      const name = document.getElementById("register-name").value.trim();
+      const email = document.getElementById("register-email").value.trim();
       const password = document.getElementById("register-password").value;
 
-      const name = email.split("@")[0].replace(".", "_");
+      if (!/^[a-zA-Z0-9_]+$/.test(name)) {
+        alert("Username can only contain letters, numbers, and underscores.");
+        return;
+      }
+
+      if (!email.endsWith("@stud.noroff.no")) {
+        alert("Email must be a valid @stud.noroff.no address.");
+        return;
+      }
+
+      if (password.length < 8) {
+        alert("Password must be at least 8 characters long.");
+        return;
+      }
 
       try {
         const { registerUser } = await import("../api/auth/register.js");
@@ -298,7 +320,8 @@ export async function initNavigation() {
 
         alert("Registration successful! Please sign in.");
 
-        // Switch to sign in view
+        document.getElementById("register-form").reset();
+
         hideAllProfileViews();
         profileSigninView.classList.remove("hidden");
       } catch (error) {
@@ -306,7 +329,6 @@ export async function initNavigation() {
       }
     });
 
-  // Sign in form submit
   document
     .getElementById("signin-form")
     ?.addEventListener("submit", async (e) => {
@@ -323,13 +345,11 @@ export async function initNavigation() {
 
         const { data } = await loginUser({ email, password });
 
-        // Save user data and token to localStorage
         saveUser(data);
         saveToken(data.accessToken);
 
         alert("Login successful!");
 
-        // Close menu and reload page
         profileMenu.classList.add("translate-x-full");
         profileOverlay.classList.add("hidden");
         window.location.reload();
