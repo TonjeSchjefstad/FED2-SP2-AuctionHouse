@@ -2,6 +2,7 @@ import { getListing } from "../api/auth/listings/getListings.js";
 import { placeBid } from "../api/auth/listings/placeBid.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 import { toggleWatchlist, isInWatchlist } from "../storage/watchlist.js";
+import { getProfile } from "../api/profiles/getProfile.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
@@ -33,6 +34,7 @@ const watchlistBtn = document.getElementById("watchlist-btn");
 const user = getUser();
 const token = getToken();
 const isLoggedIn = !!(user && token);
+let userCredits = 0;
 
 let currentListing = null;
 
@@ -119,6 +121,17 @@ function renderBidHistory(bids) {
     .join("");
 }
 
+async function loadUserCredits() {
+  if (!user || !token) return;
+
+  try {
+    const { data } = await getProfile(user.name);
+    userCredits = data.credits || 0;
+  } catch (error) {
+    console.error("Failed to load user credits:", error);
+  }
+}
+
 async function loadListing() {
   if (!listingId) {
     loadingEl.classList.add("hidden");
@@ -132,6 +145,8 @@ async function loadListing() {
 
     loadingEl.classList.add("hidden");
     listingContentEl.classList.remove("hidden");
+
+    await loadUserCredits();
 
     document.title = `${data.title} - Maison Ardéne Auction House`;
     breadcrumbTitleEl.textContent = data.title;
@@ -165,7 +180,7 @@ async function loadListing() {
       ownListingMessageEl.classList.remove("hidden");
     } else if (isLoggedIn) {
       biddingSectionEl.classList.remove("hidden");
-      userCreditsEl.textContent = `Your available credit: $${user.credits?.toLocaleString() || 0}`;
+      userCreditsEl.textContent = `Your available credit: $${userCredits.toLocaleString()}`;
       bidInputEl.placeholder = `$${currentBid + 1}`;
       bidInputEl.min = currentBid + 1;
     } else {
@@ -197,8 +212,8 @@ placeBidBtn?.addEventListener("click", async () => {
     return;
   }
 
-  if (user.credits && amount > user.credits) {
-    bidErrorEl.textContent = `You don't have enough credits. Your balance: $${user.credits.toLocaleString()}`;
+  if (userCredits && amount > userCredits) {
+    bidErrorEl.textContent = `You don't have enough credits. Your balance: $${userCredits.toLocaleString()}`;
     bidErrorEl.classList.remove("hidden");
     return;
   }
