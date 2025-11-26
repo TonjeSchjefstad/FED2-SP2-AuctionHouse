@@ -47,96 +47,79 @@
             items that embody quality and prestige.
           </p>
 
-          <div id="add-listing-container" class="hidden text-center mb-8">
-            <a href="/listings/create/" class="btn-dark inline-block"
-              >Add New Listing</a
-            >
-          </div>
+          <div class="border-b border-border mb-6"></div>
 
-          <div class="max-w-2xl mx-auto mb-8">
-            <div class="relative">
-              <input
-                type="text"
-                id="search-input"
-                placeholder="Search Maison Ardéne"
-                class="w-full py-3 pl-4 pr-12 border border-[#d8d6d0] rounded bg-[#fefbf4] font-serif text-base"
-              />
-              <button
-                id="search-btn"
-                class="absolute right-4 top-1/2 -translate-y-1/2 text-primary-text hover:text-button-gold"
-              >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+          <div class="mb-12">
+            <div class="flex flex-col md:flex-row gap-4">
+              <div class="flex-1 relative">
+                <input
+                  type="text"
+                  id="search-input"
+                  placeholder="Search Maison Ardéne"
+                  class="w-full py-3 pl-4 pr-12 border border-[#d8d6d0] rounded bg-[#fefbf4] font-sans text-base focus:outline-none focus:border-button-gold"
+                />
+                <button
+                  id="search-btn"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 text-primary-text hover:text-button-gold transition-colors"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
 
-          <div class="flex flex-wrap justify-center gap-2 mb-12">
-            <button
-              class="filter-btn px-4 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-gold"
-              data-tag=""
-              data-active="true"
-            >
-              All
-            </button>
-            <button
-              class="filter-btn px-4 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-gold"
-              data-tag="watches"
-            >
-              Watches
-            </button>
-            <button
-              class="filter-btn px-4 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-gold"
-              data-tag="handbags"
-            >
-              Handbags
-            </button>
-            <button
-              class="filter-btn px-4 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-gold"
-              data-tag="jewelry"
-            >
-              Jewelry
-            </button>
-            <button
-              class="filter-btn px-4 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-gold"
-              data-tag="collectibles"
-            >
-              Collectibles
-            </button>
-            <button
-              class="filter-btn px-4 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-gold"
-              data-tag="fashion"
-            >
-              Fashion
-            </button>
-            <button
-              class="filter-btn px-4 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-gold"
-              data-tag="art"
-            >
-              Art
-            </button>
-            <button
-              class="filter-btn px-4 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-gold"
-              data-tag="other"
-            >
-              Other
-            </button>
+              <div class="flex gap-4 md:contents">
+                <div class="flex-1 md:w-48">
+                  <select
+                    id="category-dropdown"
+                    class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
+                  >
+                    <option value="">All Categories</option>
+                    <option value="watches">Watches</option>
+                    <option value="handbags">Handbags</option>
+                    <option value="jewelry">Jewelry</option>
+                    <option value="collectibles">Collectibles</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="art">Art</option>
+                    <option value="antiques">Antiques</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="furniture">Furniture</option>
+                    <option value="vehicles">Vehicles</option>
+                    <option value="real-estate">Real Estate</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div class="flex-1 md:w-48">
+                  <select
+                    id="sort-select"
+                    class="w-full py-3 pl-4 pr-10 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
+                  >
+                    <option value="newest">Recently Added</option>
+                    <option value="ending-soon">Ending Soon</option>
+                    <option value="highest-bid">Highest Bid</option>
+                    <option value="lowest-bid">Lowest Bid</option>
+                    <option value="a-z">Alphabetical A-Z</option>
+                    <option value="z-a">Alphabetical Z-A</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div
             id="listings-grid"
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12"
+            class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12"
           ></div>
 
           <div id="loading" class="text-center py-12">
@@ -156,5 +139,26 @@
     </main>
 
     <footer></footer>
+
+    <a
+      href="/listings/create/"
+      id="fab-add-listing"
+      class="hidden fixed bottom-8 right-8 w-14 h-14 bg-button-gold text-button-gold-text rounded-full shadow-2xl hover:bg-accent-hover transition-all hover:scale-110 z-40 items-center justify-center group"
+      title="Add New Listing"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2.5"
+          d="M12 4v16m8-8H4"
+        />
+      </svg>
+    </a>
   </body>
 </html>

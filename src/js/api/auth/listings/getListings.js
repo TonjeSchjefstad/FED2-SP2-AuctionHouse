@@ -5,19 +5,23 @@ export async function getListings({
   limit = 12,
   tag = "",
   active = true,
+  sort = "",
+  sortOrder = "",
 } = {}) {
   try {
-    let url = `${API_LISTINGS}?_seller=true&_bids=true&limit=${limit}&page=${page}`;
+    const params = new URLSearchParams({
+      page: page.toString(),
+      limit: limit.toString(),
+      _bids: "true",
+      _seller: "true",
+    });
 
-    if (active) {
-      url += `&_active=true`;
-    }
+    if (active) params.append("_active", "true");
+    if (tag) params.append("_tag", tag);
+    if (sort) params.append("sort", sort);
+    if (sortOrder) params.append("sortOrder", sortOrder);
 
-    if (tag) {
-      url += `&_tag=${tag}`;
-    }
-
-    const response = await fetch(url);
+    const response = await fetch(`${API_LISTINGS}?${params}`);
 
     if (!response.ok) {
       const errorData = await response.json();
