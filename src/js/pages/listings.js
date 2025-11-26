@@ -7,6 +7,7 @@ import { getUser, getToken } from "../storage/localStorage.js";
 let currentPage = 1;
 let currentTag = "";
 let currentSearch = "";
+let currentSort = "newest";
 
 const listingsGrid = document.getElementById("listings-grid");
 const loadingEl = document.getElementById("loading");
@@ -14,15 +15,17 @@ const emptyStateEl = document.getElementById("empty-state");
 const paginationEl = document.getElementById("pagination");
 const searchInput = document.getElementById("search-input");
 const searchBtn = document.getElementById("search-btn");
-const addListingContainer = document.getElementById("add-listing-container");
-const filterBtns = document.querySelectorAll(".filter-btn");
+const fabBtn = document.getElementById("fab-add-listing");
+const sortSelect = document.getElementById("sort-select");
+const categoryDropdown = document.getElementById("category-dropdown");
 
 const user = getUser();
 const token = getToken();
 const isLoggedIn = !!(user && token);
 
-if (isLoggedIn && addListingContainer) {
-  addListingContainer.classList.remove("hidden");
+if (isLoggedIn && fabBtn) {
+  fabBtn.classList.remove("hidden");
+  fabBtn.classList.add("flex");
 }
 
 function getTimeRemaining(endsAt) {
@@ -44,6 +47,37 @@ function getTimeRemaining(endsAt) {
 function getCurrentBid(bids) {
   if (!bids || bids.length === 0) return 0;
   return Math.max(...bids.map((bid) => bid.amount));
+}
+
+function getSortParams(sortType) {
+  switch (sortType) {
+    case "newest":
+      return { sort: "created", sortOrder: "desc" };
+    case "ending-soon":
+      return { sort: "endsAt", sortOrder: "asc" };
+    case "a-z":
+      return { sort: "title", sortOrder: "asc" };
+    case "z-a":
+      return { sort: "title", sortOrder: "desc" };
+    case "highest-bid":
+    case "lowest-bid":
+      return { sort: "", sortOrder: "" };
+    default:
+      return { sort: "created", sortOrder: "desc" };
+  }
+}
+
+function sortListingsByBid(listings, sortType) {
+  if (sortType === "highest-bid") {
+    return [...listings].sort(
+      (a, b) => getCurrentBid(b.bids) - getCurrentBid(a.bids),
+    );
+  } else if (sortType === "lowest-bid") {
+    return [...listings].sort(
+      (a, b) => getCurrentBid(a.bids) - getCurrentBid(b.bids),
+    );
+  }
+  return listings;
 }
 
 function renderListingCard(listing) {
@@ -101,20 +135,30 @@ function renderPagination(meta) {
 }
 
 async function loadListings() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
   try {
     loadingEl.classList.remove("hidden");
     emptyStateEl.classList.add("hidden");
     listingsGrid.innerHTML = "";
 
     let result;
+    const sortParams = getSortParams(currentSort);
 
     if (currentSearch) {
       result = await searchListings(currentSearch);
+      result.data = sortListingsByBid(result.data, currentSort);
     } else {
       result = await getListings({
         page: currentPage,
         tag: currentTag,
+        sort: sortParams.sort,
+        sortOrder: sortParams.sortOrder,
       });
+
+      if (currentSort === "highest-bid" || currentSort === "lowest-bid") {
+        result.data = sortListingsByBid(result.data, currentSort);
+      }
     }
 
     loadingEl.classList.add("hidden");
@@ -134,44 +178,25 @@ async function loadListings() {
   }
 }
 
-filterBtns.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    filterBtns.forEach((b) => {
-      b.classList.remove(
-        "bg-button-dark",
-        "text-button-dark-text",
-        "border-button-dark",
-      );
-      b.classList.add("bg-card", "border-border");
-    });
-    btn.classList.remove("bg-card", "border-border");
-    btn.classList.add(
-      "bg-button-dark",
-      "text-button-dark-text",
-      "border-button-dark",
-    );
-
-    currentTag = btn.dataset.tag;
-    currentPage = 1;
-    currentSearch = "";
-    searchInput.value = "";
-    loadListings();
-  });
+categoryDropdown?.addEventListener("change", (e) => {
+  currentTag = e.target.value;
+  currentPage = 1;
+  currentSearch = "";
+  searchInput.value = "";
+  loadListings();
 });
 
-filterBtns[0].classList.remove("bg-card", "border-border");
-filterBtns[0].classList.add(
-  "bg-button-dark",
-  "text-button-dark-text",
-  "border-button-dark",
-);
+sortSelect?.addEventListener("change", (e) => {
+  currentSort = e.target.value;
+  currentPage = 1;
+  loadListings();
+});
 
 searchBtn?.addEventListener("click", () => {
   currentSearch = searchInput.value.trim();
   currentPage = 1;
   currentTag = "";
-  filterBtns.forEach((b) => b.classList.remove("active"));
-  filterBtns[0].classList.add("active");
+  if (categoryDropdown) categoryDropdown.value = "";
   loadListings();
 });
 
@@ -180,8 +205,7 @@ searchInput?.addEventListener("keypress", (e) => {
     currentSearch = searchInput.value.trim();
     currentPage = 1;
     currentTag = "";
-    filterBtns.forEach((b) => b.classList.remove("active"));
-    filterBtns[0].classList.add("active");
+    if (categoryDropdown) categoryDropdown.value = "";
     loadListings();
   }
 });
