@@ -101,6 +101,8 @@ function renderPagination(meta) {
 }
 
 async function loadListings() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
   try {
     loadingEl.classList.remove("hidden");
     emptyStateEl.classList.add("hidden");
