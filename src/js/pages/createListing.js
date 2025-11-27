@@ -1,17 +1,17 @@
 import { createListing } from "../api/auth/listings/createListing.js";
 import { getUser, getToken } from "../storage/localStorage.js";
+import { showAlert } from "../utils/alerts.js";
 
 const user = getUser();
 const token = getToken();
 
 if (!user || !token) {
-  alert("Please sign in to create a listing");
+  showAlert("Please sign in to create a listing", "error");
   window.location.href = "/";
 }
 
 const form = document.getElementById("create-listing-form");
 const submitBtn = document.getElementById("submit-btn");
-const errorMessageEl = document.getElementById("error-message");
 const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const imageUrl1Input = document.getElementById("image-url-1");
@@ -24,37 +24,26 @@ const now = new Date();
 now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
 endsAtInput.min = now.toISOString().slice(0, 16);
 
-function showError(message) {
-  errorMessageEl.querySelector("p").textContent = message;
-  errorMessageEl.classList.remove("hidden");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function hideError() {
-  errorMessageEl.classList.add("hidden");
-}
-
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  hideError();
 
   const title = titleInput.value.trim();
   const description = descriptionInput.value.trim();
   const endsAt = endsAtInput.value;
 
   if (!title) {
-    showError("Title is required.");
+    showAlert("Title is required.", "error");
     return;
   }
 
   if (!endsAt) {
-    showError("Auction end time is required.");
+    showAlert("Auction end time is required.", "error");
     return;
   }
 
   const endsAtDate = new Date(endsAt);
   if (endsAtDate <= new Date()) {
-    showError("Auction end time must be in the future.");
+    showAlert("Auction end time must be in the future.", "error");
     return;
   }
 
@@ -101,10 +90,12 @@ form.addEventListener("submit", async (e) => {
 
   try {
     const { data } = await createListing(listingData);
-    alert("Listing created successfully!");
-    window.location.href = `/listings/listing/?id=${data.id}`;
+    showAlert("Listing created successfully!", "success");
+    setTimeout(() => {
+      window.location.href = `/listings/listing/?id=${data.id}`;
+    }, 1000);
   } catch (error) {
-    showError(error.message);
+    showAlert(error.message, "error");
     submitBtn.disabled = false;
     submitBtn.textContent = "Add Listing";
   }
