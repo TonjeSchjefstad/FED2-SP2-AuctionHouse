@@ -3,6 +3,7 @@ import { placeBid } from "../api/auth/listings/placeBid.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 import { toggleWatchlist, isInWatchlist } from "../storage/watchlist.js";
 import { getProfile } from "../api/profiles/getProfile.js";
+import { showAlert } from "../utils/alerts.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
@@ -224,8 +225,10 @@ placeBidBtn?.addEventListener("click", async () => {
 
   try {
     await placeBid(listingId, amount);
-    alert("Bid placed successfully!");
-    window.location.reload();
+    showAlert("Bid placed successfully!", "success");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   } catch (error) {
     bidErrorEl.textContent = error.message;
     bidErrorEl.classList.remove("hidden");

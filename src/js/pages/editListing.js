@@ -1,6 +1,7 @@
 import { getListing } from "../api/auth/listings/getListings.js";
 import { updateListing } from "../api/auth/listings/updateListing.js";
 import { getUser, getToken } from "../storage/localStorage.js";
+import { showAlert } from "../utils/alerts.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
@@ -9,12 +10,12 @@ const user = getUser();
 const token = getToken();
 
 if (!user || !token) {
-  alert("Please sign in to edit a listing.");
+  showAlert("Please sign in to edit a listing.", "error");
   window.location.href = "/";
 }
 
 if (!listingId) {
-  alert("No listing ID provided.");
+  showAlert("No listing ID provided.", "error");
   window.location.href = "/profile/";
 }
 
@@ -23,7 +24,6 @@ const editContentEl = document.getElementById("edit-content");
 const backLink = document.getElementById("back-link");
 const form = document.getElementById("edit-listing-form");
 const submitBtn = document.getElementById("submit-btn");
-const errorMessageEl = document.getElementById("error-message");
 const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const imageUrl1Input = document.getElementById("image-url-1");
@@ -31,16 +31,6 @@ const imageUrl2Input = document.getElementById("image-url-2");
 const imageUrl3Input = document.getElementById("image-url-3");
 const tagsInput = document.getElementById("tags");
 const endsAtInput = document.getElementById("endsAt");
-
-function showError(message) {
-  errorMessageEl.querySelector("p").textContent = message;
-  errorMessageEl.classList.remove("hidden");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function hideError() {
-  errorMessageEl.classList.add("hidden");
-}
 
 function formatDateTime(isoString) {
   const date = new Date(isoString);
@@ -58,7 +48,7 @@ async function loadListing() {
     const { data } = await getListing(listingId);
 
     if (data.seller.name !== user.name) {
-      alert("You can only edit your own listings.");
+      showAlert("You can only edit your own listings.", "error");
       window.location.href = `/listings/listing/?id=${listingId}`;
       return;
     }
@@ -86,20 +76,19 @@ async function loadListing() {
     document.title = `Edit ${data.title} - Maison Ardéne Auction House`;
   } catch (error) {
     loadingEl.classList.add("hidden");
-    alert("Failed to load listing: " + error.message);
+    showAlert("Failed to load listing: " + error.message, "error");
     window.location.href = "/profile/";
   }
 }
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  hideError();
 
   const title = titleInput.value.trim();
   const description = descriptionInput.value.trim();
 
   if (!title) {
-    showError("Title is required.");
+    showAlert("Title is required.", "error");
     return;
   }
 
@@ -145,10 +134,12 @@ form.addEventListener("submit", async (e) => {
 
   try {
     await updateListing(listingId, updateData);
-    alert("Listing updated successfully!");
-    window.location.href = `/listings/listing/?id=${listingId}`;
+    showAlert("Listing updated successfully!", "success");
+    setTimeout(() => {
+      window.location.href = `/listings/listing/?id=${listingId}`;
+    }, 1000);
   } catch (error) {
-    showError(error.message);
+    showAlert(error.message, "error");
     submitBtn.disabled = false;
     submitBtn.textContent = "Save Changes";
   }

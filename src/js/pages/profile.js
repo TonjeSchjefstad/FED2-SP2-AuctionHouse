@@ -3,6 +3,7 @@ import { getUser, getToken } from "../storage/localStorage.js";
 import { getListing } from "../api/auth/listings/getListings.js";
 import { getWatchlist } from "../storage/watchlist.js";
 import { deleteListing } from "../api/auth/listings/deleteListing.js";
+import { showAlert } from "../utils/alerts.js";
 
 const user = getUser();
 const token = getToken();
@@ -11,14 +12,14 @@ const urlParams = new URLSearchParams(window.location.search);
 const profileName = urlParams.get("name") || user?.name;
 
 if (!profileName) {
-  alert("No profile specified.");
+  showAlert("No profile specified.", "error");
   window.location.href = "/";
 }
 
 const isOwnProfile = user && user.name === profileName;
 
 if (isOwnProfile && (!user || !token)) {
-  alert("Please sign in to view your profile.");
+  showAlert("Please sign in to view your profile.", "error");
   window.location.href = "/";
 }
 
@@ -277,9 +278,9 @@ async function handleDelete() {
     closeDeleteModal();
     renderListings();
 
-    alert("Listing deleted successfully!");
+    showAlert("Listing deleted successfully!", "success");
   } catch (error) {
-    alert("Failed to delete listing: " + error.message);
+    showAlert("Failed to delete listing: " + error.message, "error");
     confirmDeleteBtn.disabled = false;
     confirmDeleteBtn.textContent = "Yes";
   }
@@ -455,7 +456,7 @@ async function loadProfile() {
     renderListings();
   } catch (error) {
     loadingEl.classList.add("hidden");
-    alert("Failed to load profile: " + error.message);
+    showAlert("Failed to load profile: " + error.message, "error");
     window.location.href = "/";
   }
 }

@@ -1,3 +1,5 @@
+import { showAlert } from "../utils/alerts.js";
+
 export function renderNavigation() {
   return `
     <!-- Mobile Menu Overlay -->
@@ -219,8 +221,15 @@ export async function initNavigation() {
         );
         clearUser();
         clearToken();
-        alert("Logged out successfully!");
-        window.location.reload();
+
+        showAlert("Logged out successfully!", "success");
+
+        profileMenu.classList.add("translate-x-full");
+        profileOverlay.classList.add("hidden");
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       });
   }
 
@@ -300,17 +309,20 @@ export async function initNavigation() {
       const password = document.getElementById("register-password").value;
 
       if (!/^[a-zA-Z0-9_]+$/.test(name)) {
-        alert("Username can only contain letters, numbers, and underscores.");
+        showAlert(
+          "Username can only contain letters, numbers, and underscores.",
+          "error",
+        );
         return;
       }
 
       if (!email.endsWith("@stud.noroff.no")) {
-        alert("Email must be a valid @stud.noroff.no address.");
+        showAlert("Email must be a valid @stud.noroff.no address.", "error");
         return;
       }
 
       if (password.length < 8) {
-        alert("Password must be at least 8 characters long.");
+        showAlert("Password must be at least 8 characters long.", "error");
         return;
       }
 
@@ -318,14 +330,14 @@ export async function initNavigation() {
         const { registerUser } = await import("../api/auth/register.js");
         await registerUser({ name, email, password });
 
-        alert("Registration successful! Please sign in.");
+        showAlert("Registration successful! Please sign in.", "success");
 
         document.getElementById("register-form").reset();
 
         hideAllProfileViews();
         profileSigninView.classList.remove("hidden");
       } catch (error) {
-        alert(error.message);
+        showAlert(error.message, "error");
       }
     });
 
@@ -348,13 +360,16 @@ export async function initNavigation() {
         saveUser(data);
         saveToken(data.accessToken);
 
-        alert("Login successful!");
+        showAlert("Login successful!", "success");
 
         profileMenu.classList.add("translate-x-full");
         profileOverlay.classList.add("hidden");
-        window.location.reload();
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } catch (error) {
-        alert(error.message);
+        showAlert(error.message, "error");
       }
     });
 }
