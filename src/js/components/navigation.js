@@ -204,14 +204,35 @@ export async function initNavigation() {
   const isLoggedIn = !!(user && token);
 
   if (isLoggedIn) {
+    let userCredits = 0;
+    try {
+      const { getProfile } = await import("../api/profiles/getProfile.js");
+      const { data } = await getProfile(user.name);
+      userCredits = data.credits || 0;
+    } catch (error) {
+      console.error("Failed to load user credits:", error);
+    }
     profileMainView.innerHTML = `
-      <h2 class="font-heading font-bold text-2xl mb-6">Welcome ${user.name}</h2>
-      <div class="space-y-4">
-        <a href="/profile/" class="block font-heading text-xl hover:text-button-gold transition-colors">My Profile</a>
-        <a href="/listings/create/" class="block font-heading text-xl hover:text-button-gold transition-colors">Create Listing</a>
-      </div>
-      <button id="logout-btn" class="btn-dark w-full mt-8">Logout</button>
-    `;
+    <div class="pb-4 mb-4 border-b border-border">
+      <h2 class="font-heading font-bold text-2xl mb-2">Welcome ${user.name}</h2>
+      <p class="font-sans text-base text-secondary-text">Credit: <span class="font-bold text-button-gold">$${userCredits.toLocaleString()}</span></p>
+    </div>
+    <div class="space-y-4 pb-4 mb-4 border-b border-border">
+      <a href="/profile/" class="flex items-center justify-between font-heading text-xl hover:text-button-gold transition-colors">
+        My Profile
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="/listings/create/" class="flex items-center justify-between font-heading text-xl hover:text-button-gold transition-colors">
+        Create New Listing
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+    <button id="logout-btn" class="btn-dark w-full">Logout</button>
+  `;
 
     document
       .getElementById("logout-btn")
