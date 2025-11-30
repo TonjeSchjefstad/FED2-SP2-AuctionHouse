@@ -17,6 +17,7 @@ const descriptionInput = document.getElementById("description");
 const imageUrl1Input = document.getElementById("image-url-1");
 const imageUrl2Input = document.getElementById("image-url-2");
 const imageUrl3Input = document.getElementById("image-url-3");
+const imageUrl4Input = document.getElementById("image-url-4");
 const tagsInput = document.getElementById("tags");
 const endsAtInput = document.getElementById("endsAt");
 
@@ -52,6 +53,7 @@ form.addEventListener("submit", async (e) => {
     imageUrl1Input.value.trim(),
     imageUrl2Input.value.trim(),
     imageUrl3Input.value.trim(),
+    imageUrl4Input.value.trim(),
   ];
 
   imageUrls.forEach((url) => {
