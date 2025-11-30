@@ -50,6 +50,8 @@ async function loadHighlightedListings() {
       page: 1,
       limit: 4,
       active: true,
+      sort: "created",
+      order: "desc",
     });
 
     if (data && data.length > 0) {
