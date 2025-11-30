@@ -196,6 +196,10 @@ function renderListings() {
 }
 
 document.addEventListener("click", (e) => {
+  if (e.target.closest("a[href]")) {
+    return;
+  }
+
   if (
     !e.target.closest(".action-menu-btn") &&
     !e.target.closest(".action-menu")
@@ -210,6 +214,7 @@ document.addEventListener("click", (e) => {
   const btn = e.target.closest(".action-menu-btn");
   if (btn) {
     e.stopPropagation();
+    e.preventDefault();
     const menu = btn.nextElementSibling;
     const allMenus = document.querySelectorAll(".action-menu");
 
