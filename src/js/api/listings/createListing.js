@@ -1,16 +1,16 @@
-import { API_LISTINGS, API_KEY } from "../../constants.js";
-import { getToken } from "../../../storage/localStorage.js";
+import { API_LISTINGS, API_KEY } from "../constants.js";
+import { getToken } from "../../storage/localStorage.js";
 
-export async function updateListing(listingId, listingData) {
+export async function createListing(listingData) {
   try {
     const token = getToken();
 
     if (!token) {
-      throw new Error("You must be logged in to update a listing");
+      throw new Error("You must be logged in to create a listing");
     }
 
-    const response = await fetch(`${API_LISTINGS}/${listingId}`, {
-      method: "PUT",
+    const response = await fetch(API_LISTINGS, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -23,13 +23,13 @@ export async function updateListing(listingId, listingData) {
       const errorData = await response.json();
       const errorMessage =
         errorData.errors?.[0]?.message ||
-        `Failed to update listing: ${response.status}`;
+        `Failed to create listing: ${response.status}`;
       throw new Error(errorMessage);
     }
 
     return await response.json();
   } catch (error) {
-    console.error("Error updating listing:", error);
+    console.error("Error creating listing:", error);
     throw error;
   }
 }

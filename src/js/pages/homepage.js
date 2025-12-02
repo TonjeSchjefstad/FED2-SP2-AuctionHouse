@@ -1,4 +1,4 @@
-import { getListings } from "../api/auth/listings/getListings";
+import { getListings } from "../api/listings/getListings";
 
 const highlightedGrid = document.getElementById("highlighted-listings-grid");
 

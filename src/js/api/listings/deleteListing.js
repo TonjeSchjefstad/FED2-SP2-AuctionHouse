@@ -1,5 +1,5 @@
-import { API_LISTINGS, API_KEY } from "../../constants.js";
-import { getToken } from "../../../storage/localStorage.js";
+import { API_LISTINGS, API_KEY } from "../constants.js";
+import { getToken } from "../../storage/localStorage.js";
 
 export async function deleteListing(listingId) {
   try {

@@ -1,7 +1,4 @@
-import {
-  getListings,
-  searchListings,
-} from "../api/auth/listings/getListings.js";
+import { getListings, searchListings } from "../api/listings/getListings.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 
 let currentPage = 1;

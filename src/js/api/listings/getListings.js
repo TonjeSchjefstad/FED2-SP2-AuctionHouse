@@ -1,4 +1,4 @@
-import { API_LISTINGS } from "../../constants.js";
+import { API_LISTINGS } from "../constants.js";
 
 export async function getListings({
   page = 1,

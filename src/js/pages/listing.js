@@ -1,5 +1,5 @@
-import { getListing } from "../api/auth/listings/getListings.js";
-import { placeBid } from "../api/auth/listings/placeBid.js";
+import { getListing } from "../api/listings/getListings.js";
+import { placeBid } from "../api/listings/placeBid.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 import { toggleWatchlist, isInWatchlist } from "../storage/watchlist.js";
 import { getProfile } from "../api/profiles/getProfile.js";
