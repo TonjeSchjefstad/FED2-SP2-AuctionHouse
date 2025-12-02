@@ -1,4 +1,4 @@
-import { createListing } from "../api/auth/listings/createListing.js";
+import { createListing } from "../api/listings/createListing.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 import { showAlert } from "../utils/alerts.js";
 

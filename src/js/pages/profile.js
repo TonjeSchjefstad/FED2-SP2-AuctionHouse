@@ -1,8 +1,8 @@
 import { getProfile, getProfileBids } from "../api/profiles/getProfile.js";
 import { getUser, getToken } from "../storage/localStorage.js";
-import { getListing } from "../api/auth/listings/getListings.js";
+import { getListing } from "../api/listings/getListings.js";
 import { getWatchlist } from "../storage/watchlist.js";
-import { deleteListing } from "../api/auth/listings/deleteListing.js";
+import { deleteListing } from "../api/listings/deleteListing.js";
 import { showAlert } from "../utils/alerts.js";
 
 const user = getUser();
