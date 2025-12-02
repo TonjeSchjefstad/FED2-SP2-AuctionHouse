@@ -1,3 +1,4 @@
+import { API_KEY } from "../api/constants.js";
 import { getProfile, getProfileBids } from "../api/profiles/getProfile.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 import { getListing } from "../api/listings/getListings.js";
@@ -355,7 +356,7 @@ async function loadProfile() {
         {
           headers: {
             Authorization: token ? `Bearer ${token}` : "",
-            "X-Noroff-API-Key": "db7225e1-9983-4e59-a55d-6f2cb506417d",
+            "X-Noroff-API-Key": API_KEY,
           },
         },
       );

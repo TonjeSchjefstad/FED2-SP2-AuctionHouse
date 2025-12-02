@@ -1,7 +1,5 @@
-import { API_BASE, API_KEY } from "../constants.js";
+import { API_PROFILES, API_KEY } from "../constants.js";
 import { getToken } from "../../storage/localStorage.js";
-
-const API_PROFILES = `${API_BASE}/auction/profiles`;
 
 export async function updateProfile(name, profileData) {
   try {
