@@ -54,11 +54,13 @@
         padding: 0.75rem 2rem;
         cursor: pointer;
         border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(198, 162, 74, 0.25), 0 1px 3px rgba(198, 162, 74, 0.15);
         transition: background-color 0.2s;
     }
 
     .btn-gold:hover {
         background-color: var(--color-button-gold-hovered);
+        box-shadow: 0 4px 12px rgba(198, 162, 74, 0.35), 0 2px 6px rgba(198, 162, 74, 0.25);
     }
 
     .btn-gold:active {
@@ -73,11 +75,15 @@
         padding: 0.75rem 5rem;
         cursor: pointer;
         border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(19, 27, 39, 0.15), 0 1px 3px rgba(19, 27, 39, 0.1);
         transition: background-color 0.2s;
     }
 
     .btn-dark:hover {
         background-color: var(--color-button-dark-hovered);
+        box-shadow: 0 4px 12px rgba(19, 27, 39, 0.25), 0 2px 6px rgba(19, 27, 39, 0.15);
+        transition: background-color 0.2s;
+        transition: all 0.2s ease;
     }
 
     .product-card {

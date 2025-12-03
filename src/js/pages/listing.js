@@ -258,6 +258,12 @@ watchlistBtn.addEventListener("click", () => {
   const listingId = new URLSearchParams(window.location.search).get("id");
   const isWatchlisted = toggleWatchlist(listingId);
   updateWatchlistButton(isWatchlisted);
+
+  if (isWatchlisted) {
+    showAlert("Added to watchlist", "success");
+  } else {
+    showAlert("Removed from watchlist", "info");
+  }
 });
 
 loadListing();
