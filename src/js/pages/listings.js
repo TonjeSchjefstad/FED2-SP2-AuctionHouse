@@ -114,21 +114,74 @@ function renderPagination(meta) {
     return;
   }
 
+  const isMobile = window.innerWidth < 640;
   let html = "";
 
-  if (!meta.isFirstPage) {
-    html += `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${meta.currentPage - 1}">&lt;</button>`;
-  }
-  for (let i = 1; i <= meta.pageCount; i++) {
-    if (i === meta.currentPage) {
-      html += `<button class="pagination-btn px-3 py-2 border border-button-dark rounded bg-button-dark text-white font-sans text-sm cursor-pointer" data-page="${i}">${i}</button>`;
-    } else {
-      html += `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${i}">${i}</button>`;
-    }
-  }
+  if (isMobile) {
+    html = `
+      <div class="flex items-center justify-center gap-2 w-full">
+        ${
+          !meta.isFirstPage
+            ? `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${meta.currentPage - 1}">&lt;</button>`
+            : `<button class="px-3 py-2 border border-gray-300 rounded bg-gray-100 font-sans text-sm text-gray-400 cursor-not-allowed" disabled>&lt;</button>`
+        }
+        
+        <span class="px-4 py-2 font-sans text-sm">
+          Page ${meta.currentPage} of ${meta.pageCount}
+        </span>
+        
+        ${
+          !meta.isLastPage
+            ? `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${meta.currentPage + 1}">&gt;</button>`
+            : `<button class="px-3 py-2 border border-gray-300 rounded bg-gray-100 font-sans text-sm text-gray-400 cursor-not-allowed" disabled>&gt;</button>`
+        }
+      </div>
+    `;
+  } else {
+    const maxVisible = 7;
+    const current = meta.currentPage;
+    const total = meta.pageCount;
 
-  if (!meta.isLastPage) {
-    html += `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${meta.currentPage + 1}">&gt;</button>`;
+    if (!meta.isFirstPage) {
+      html += `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${current - 1}">&lt;</button>`;
+    }
+
+    if (total <= maxVisible) {
+      for (let i = 1; i <= total; i++) {
+        if (i === current) {
+          html += `<button class="pagination-btn px-3 py-2 border border-button-dark rounded bg-button-dark text-white font-sans text-sm cursor-pointer" data-page="${i}">${i}</button>`;
+        } else {
+          html += `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${i}">${i}</button>`;
+        }
+      }
+    } else {
+      html += `<button class="pagination-btn px-3 py-2 border ${current === 1 ? "border-button-dark bg-button-dark text-white" : "border-border bg-card hover:border-button-dark"} rounded font-sans text-sm cursor-pointer transition-all" data-page="1">1</button>`;
+
+      if (current > 3) {
+        html += `<span class="px-2 py-2 font-sans text-sm text-gray-500">...</span>`;
+      }
+
+      const start = Math.max(2, current - 1);
+      const end = Math.min(total - 1, current + 1);
+
+      for (let i = start; i <= end; i++) {
+        if (i === current) {
+          html += `<button class="pagination-btn px-3 py-2 border border-button-dark rounded bg-button-dark text-white font-sans text-sm cursor-pointer" data-page="${i}">${i}</button>`;
+        } else {
+          html += `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${i}">${i}</button>`;
+        }
+      }
+
+      if (current < total - 2) {
+        html += `<span class="px-2 py-2 font-sans text-sm text-gray-500">...</span>`;
+      }
+
+      html += `<button class="pagination-btn px-3 py-2 border ${current === total ? "border-button-dark bg-button-dark text-white" : "border-border bg-card hover:border-button-dark"} rounded font-sans text-sm cursor-pointer transition-all" data-page="${total}">${total}</button>`;
+    }
+
+    if (!meta.isLastPage) {
+      html += `<button class="pagination-btn px-3 py-2 border border-border rounded bg-card font-sans text-sm cursor-pointer transition-all hover:border-button-dark" data-page="${current + 1}">&gt;</button>`;
+    }
   }
 
   paginationEl.innerHTML = html;
