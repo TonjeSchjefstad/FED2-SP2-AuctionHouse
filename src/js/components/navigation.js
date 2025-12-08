@@ -1,22 +1,23 @@
 import { showAlert } from "../utils/alerts.js";
+import {
+  validateEmail,
+  validatePassword,
+  validateUsername,
+} from "../utils/validation.js";
 
 export function renderNavigation() {
   return `
-    <!-- Mobile Menu Overlay -->
     <div id="menu-overlay" class="hidden fixed inset-0 bg-black/50 z-40"></div>
     
-    <!-- Mobile Menu (Navigation Only) -->
     <nav id="mobile-menu" class="fixed top-0 left-0 h-full w-full sm:w-100 bg-header shadow-lg transform -translate-x-full transition-transform duration-300 z-50 overflow-y-auto">
       <div class="p-6">
         
-        <!-- Close Button -->
-        <button id="menu-close" class="absolute top-4 left-4 text-primary-text hover:text-button-gold">
+        <button id="menu-close" class="absolute top-4 left-4 text-primary-text hover:text-button-gold" aria-label="Close Menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
 
-        <!-- Navigation Links -->
         <div class="mt-12 space-y-4">
           <a href="/" class="block font-heading text-xl hover:text-button-gold transition-colors flex items-center justify-between">
             Home
@@ -53,21 +54,17 @@ export function renderNavigation() {
       </div>
     </nav>
 
-    <!-- Profile Menu Overlay -->
     <div id="profile-overlay" class="hidden fixed inset-0 bg-black/50 z-40"></div>
     
-    <!-- Profile Menu -->
     <nav id="profile-menu" class="fixed top-0 right-0 h-full w-full sm:w-100 bg-header shadow-lg transform translate-x-full transition-transform duration-300 z-50 overflow-y-auto">
       <div class="p-6">
         
-        <!-- Close Button -->
-        <button id="profile-close" class="absolute top-4 right-4 text-primary-text hover:text-button-gold">
+        <button id="profile-close" class="absolute top-4 right-4 text-primary-text hover:text-button-gold" aria-label="Close Profile Menu">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
 
-        <!-- Main View (Not Logged In) -->
         <div id="profile-main-view" class="mt-12">
           <h2 class="font-heading text-2xl mb-6">Sign In</h2>
           <p class="font-sans text-base mb-6">Sign in to access your profile, create listings, and place bids.</p>
@@ -75,7 +72,6 @@ export function renderNavigation() {
           <button id="show-register" class="btn-gold w-full">Create an account</button>
         </div>
 
-        <!-- Sign In View -->
         <div id="profile-signin-view" class="hidden mt-12">
           <button id="back-to-profile-main-signin" class="flex items-center gap-2 text-primary-text hover:text-button-gold mb-6">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -117,7 +113,6 @@ export function renderNavigation() {
           </form>
         </div>
 
-        <!-- Register View -->
         <div id="profile-register-view" class="hidden mt-12">
           <button id="back-to-profile-main-register" class="flex items-center gap-2 text-primary-text hover:text-button-gold mb-6">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,7 +210,7 @@ export async function initNavigation() {
     profileMainView.innerHTML = `
     <div class="pb-4 mb-4 border-b border-border">
       <h2 class="font-heading font-bold text-2xl mb-2">Welcome ${user.name}</h2>
-      <p class="font-sans text-base text-secondary-text">Credit: <span class="font-bold text-button-gold">$${userCredits.toLocaleString()}</span></p>
+      <p class="font-sans text-base text-secondary-text">Credit: <span class="font-bold text-lg text-[#8b6d24]">$${userCredits.toLocaleString()}</span></p>
     </div>
     <div class="space-y-4 pb-4 mb-4 border-b border-border">
       <a href="/profile/" class="flex items-center justify-between font-heading text-xl hover:text-button-gold transition-colors">
@@ -329,21 +324,21 @@ export async function initNavigation() {
       const email = document.getElementById("register-email").value.trim();
       const password = document.getElementById("register-password").value;
 
-      if (!/^[a-zA-Z0-9_]+$/.test(name)) {
-        showAlert(
-          "Username can only contain letters, numbers, and underscores.",
-          "error",
-        );
+      const nameValidation = validateUsername(name);
+      if (!nameValidation.valid) {
+        showAlert(nameValidation.error, "error");
         return;
       }
 
-      if (!email.endsWith("@stud.noroff.no")) {
-        showAlert("Email must be a valid @stud.noroff.no address.", "error");
+      const emailValidation = validateEmail(email);
+      if (!emailValidation.valid) {
+        showAlert(emailValidation.error, "error");
         return;
       }
 
-      if (password.length < 8) {
-        showAlert("Password must be at least 8 characters long.", "error");
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.valid) {
+        showAlert(passwordValidation.error, "error");
         return;
       }
 
@@ -367,8 +362,20 @@ export async function initNavigation() {
     ?.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const email = document.getElementById("signin-email").value;
+      const email = document.getElementById("signin-email").value.trim();
       const password = document.getElementById("signin-password").value;
+
+      const emailValidation = validateEmail(email);
+      if (!emailValidation.valid) {
+        showAlert(emailValidation.error, "error");
+        return;
+      }
+
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.valid) {
+        showAlert(passwordValidation.error, "error");
+        return;
+      }
 
       try {
         const { loginUser } = await import("../api/auth/login.js");

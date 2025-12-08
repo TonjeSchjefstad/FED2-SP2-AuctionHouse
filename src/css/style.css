@@ -1,3 +1,22 @@
+footer {
+    min-height: 960px !important;
+    display: block !important;
+}
+
+footer>div {
+    min-height: 960px !important;
+}
+
+@media (min-width: 768px) {
+    footer {
+        min-height: 400px !important;
+    }
+
+    footer>div {
+        min-height: 400px !important;
+    }
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 @import "tailwindcss";
@@ -172,4 +191,16 @@
 
 .animate-slide-out {
     animation: slide-out 0.3s ease-in;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
 }

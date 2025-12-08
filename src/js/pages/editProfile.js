@@ -2,6 +2,7 @@ import { getProfile } from "../api/profiles/getProfile.js";
 import { updateProfile } from "../api/profiles/updateProfile.js";
 import { getUser, getToken, saveUser } from "../storage/localStorage.js";
 import { showAlert } from "../utils/alerts.js";
+import { validateBio, validateUrl } from "../utils/validation.js";
 
 const user = getUser();
 const token = getToken();
@@ -42,9 +43,26 @@ form.addEventListener("submit", async (e) => {
   const avatarUrl = avatarUrlInput.value.trim();
   const bannerUrl = bannerUrlInput.value.trim();
 
-  if (bio.length > 160) {
-    showAlert("Bio must be 160 characters or less.", "error");
+  const bioValidation = validateBio(bio);
+  if (!bioValidation.valid) {
+    showAlert(bioValidation.error, "error");
     return;
+  }
+
+  if (avatarUrl) {
+    const avatarValidation = validateUrl(avatarUrl, "Avatar URL");
+    if (!avatarValidation.valid) {
+      showAlert(avatarValidation.error, "error");
+      return;
+    }
+  }
+
+  if (bannerUrl) {
+    const bannerValidation = validateUrl(bannerUrl, "Banner URL");
+    if (!bannerValidation.valid) {
+      showAlert(bannerValidation.error, "error");
+      return;
+    }
   }
 
   const updateData = {};
@@ -56,14 +74,14 @@ form.addEventListener("submit", async (e) => {
   if (avatarUrl) {
     updateData.avatar = {
       url: avatarUrl,
-      alt: "",
+      alt: user.name,
     };
   }
 
   if (bannerUrl) {
     updateData.banner = {
       url: bannerUrl,
-      alt: "",
+      alt: `${user.name} banner`,
     };
   }
 

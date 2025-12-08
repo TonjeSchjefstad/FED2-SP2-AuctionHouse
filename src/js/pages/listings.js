@@ -1,5 +1,6 @@
 import { getListings, searchListings } from "../api/listings/getListings.js";
 import { getUser, getToken } from "../storage/localStorage.js";
+import { optimizeImageUrl } from "../utils/optimizeImages.js";
 
 let currentPage = 1;
 let currentTag = "";
@@ -90,13 +91,23 @@ function sortListingsByBid(listings, sortType) {
 function renderListingCard(listing) {
   const timeRemaining = getTimeRemaining(listing.endsAt);
   const currentBid = getCurrentBid(listing.bids);
-  const imageUrl = listing.media?.[0]?.url || "/public/assets/placeholder.jpg";
+  const imageUrl =
+    optimizeImageUrl(listing.media?.[0]?.url) ||
+    "/public/assets/placeholder.jpg";
   const imageAlt = listing.media?.[0]?.alt || listing.title;
 
   return `
     <div class="product-card">
       <a href="/listings/listing/?id=${listing.id}">
-        <img src="${imageUrl}" alt="${imageAlt}" class="product-card-image">
+        <img 
+          src="${imageUrl}" 
+          alt="${imageAlt}" 
+          class="product-card-image"
+          loading="lazy"
+          decoding="async"
+          width="400"
+          height="400"
+        >
       </a>
       <div class="product-card-content">
         <p class="product-card-time">${timeRemaining}</p>
@@ -109,12 +120,13 @@ function renderListingCard(listing) {
 }
 
 function renderPagination(meta) {
+  const isMobile = window.innerWidth < 640;
+
   if (!meta || meta.pageCount <= 1) {
     paginationEl.innerHTML = "";
     return;
   }
 
-  const isMobile = window.innerWidth < 640;
   let html = "";
 
   if (isMobile) {
@@ -186,7 +198,8 @@ function renderPagination(meta) {
 
   paginationEl.innerHTML = html;
 
-  paginationEl.querySelectorAll(".pagination-btn").forEach((btn) => {
+  const buttons = paginationEl.querySelectorAll(".pagination-btn");
+  buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
       currentPage = parseInt(btn.dataset.page);
       loadListings();
@@ -195,7 +208,9 @@ function renderPagination(meta) {
 }
 
 async function loadListings() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 
   try {
     loadingEl.classList.remove("hidden");
@@ -231,7 +246,9 @@ async function loadListings() {
 
     listingsGrid.innerHTML = result.data.map(renderListingCard).join("");
 
-    renderPagination(result.meta);
+    requestAnimationFrame(() => {
+      renderPagination(result.meta);
+    });
   } catch (error) {
     loadingEl.classList.add("hidden");
     listingsGrid.innerHTML = `<p class="text-center col-span-full font-sans text-lg text-red-600">Error loading listings: ${error.message}</p>`;

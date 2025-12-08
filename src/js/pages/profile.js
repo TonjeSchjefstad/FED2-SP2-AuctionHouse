@@ -5,6 +5,7 @@ import { getListing } from "../api/listings/getListings.js";
 import { getWatchlist } from "../storage/watchlist.js";
 import { deleteListing } from "../api/listings/deleteListing.js";
 import { showAlert } from "../utils/alerts.js";
+import { optimizeImageUrl } from "../utils/optimizeImages.js";
 
 const user = getUser();
 const token = getToken();
@@ -76,9 +77,11 @@ function getCurrentBid(bids) {
 function renderListingCard(listing) {
   const timeRemaining = getTimeRemaining(listing.endsAt);
   const currentBid = getCurrentBid(listing.bids);
-  const imageUrl =
-    listing.media?.[0]?.url ||
-    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800";
+
+  const imageUrl = listing.media?.[0]?.url
+    ? optimizeImageUrl(listing.media?.[0]?.url, "medium")
+    : "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&q=80&fm=webp";
+
   const imageAlt = listing.media?.[0]?.alt || listing.title;
 
   const showActions =
@@ -91,8 +94,8 @@ function renderListingCard(listing) {
         showActions
           ? `
         <div class="absolute top-4 right-4 z-10">
-          <button class="action-menu-btn p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors" data-listing-id="${listing.id}" data-listing-title="${listing.title}">
-            <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+          <button class="action-menu-btn p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors" data-listing-id="${listing.id}" data-listing-title="${listing.title}" aria-label="Actions Menu">
+            <svg class="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
             </svg>
           </button>
@@ -122,7 +125,15 @@ function renderListingCard(listing) {
           : ""
       }
       <a href="/listings/listing/?id=${listing.id}">
-        <img src="${imageUrl}" alt="${imageAlt}" class="product-card-image">
+        <img 
+          src="${imageUrl}" 
+          alt="${imageAlt}" 
+          class="product-card-image"
+          loading="lazy"
+          decoding="async"
+          width="300"
+          height="300"
+        >
       </a>
       <div class="product-card-content">
         <p class="product-card-time">${timeRemaining}</p>
@@ -400,17 +411,16 @@ async function loadProfile() {
     loadingEl.classList.add("hidden");
     profileContentEl.classList.remove("hidden");
 
-    const bannerUrl =
-      data.banner?.url ||
-      "https://images.unsplash.com/photo-1557683316-973673baf926?w=1500";
+    const bannerUrl = data.banner?.url
+      ? optimizeImageUrl(data.banner.url, "xlarge")
+      : "https://images.unsplash.com/photo-1557683316-973673baf926?w=1200&q=80&fm=webp";
     bannerImageEl.src = bannerUrl;
-    bannerImageEl.alt = data.banner?.alt || "Profile banner";
+    bannerImageEl.setAttribute("fetchpriority", "high");
 
-    const avatarUrl =
-      data.avatar?.url ||
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400";
+    const avatarUrl = data.avatar?.url
+      ? optimizeImageUrl(data.avatar.url, "medium")
+      : "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&q=80&fm=webp";
     avatarImageEl.src = avatarUrl;
-    avatarImageEl.alt = data.avatar?.alt || data.name;
 
     profileNameEl.textContent = data.name;
     profileBioEl.textContent = data.bio || "No bio provided.";

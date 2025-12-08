@@ -1,7 +1,7 @@
 export function renderHeader() {
   return `
-    <div class=" bg-header border-b border-border py-4 shadow-md">
-        <div class="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-4">
+    <div class=" bg-header border-b border-border py-2 shadow-md">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-4">
             <div class="flex items-center justify-between">
 
                 <button id="menu-toggle" class="text-primary-text hover:text-button-gold transition-colors"
@@ -12,7 +12,7 @@ export function renderHeader() {
                 </button>
 
                 <a href="/" class="text-center">
-                    <h1 class="font-logo font-bold text-2xl md:text-3xl">Maison Ardéne</h1>
+                    <h1 class="font-logo font-bold text-2xl">Maison Ardéne</h1>
                     <p class="font-logo-small text-xs uppercase tracking-wider">Auction House</p>
                 </a>
 

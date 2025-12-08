@@ -1,4 +1,5 @@
 import { getListings } from "../api/listings/getListings";
+import { optimizeImageUrl } from "../utils/optimizeImages";
 
 const highlightedGrid = document.getElementById("highlighted-listings-grid");
 
@@ -26,21 +27,28 @@ function getCurrentBid(bids) {
 function renderListingCard(listing) {
   const timeRemaining = getTimeRemaining(listing.endsAt);
   const currentBid = getCurrentBid(listing.bids);
-  const imageUrl = listing.media?.[0]?.url || "/public/assets/placeholder.jpg";
+  const imageUrl = optimizeImageUrl(listing.media?.[0]?.url);
   const imageAlt = listing.media?.[0]?.alt || listing.title;
 
   return `
         <div class="product-card">
-            <a href="/listings/listing/?id=${listing.id}">
-                <img src="${imageUrl}" alt="${imageAlt}" class="product-card-image">
-            </a>
-            <div class="product-card-content">
-                <p class="product-card-time">${timeRemaining}</p>
-                <h3 class="product-card-title">${listing.title}</h3>
-                <p class="product-card-bid">CURRENT BID: $ ${currentBid.toLocaleString()}</p>
-                <a href="/listings/listing/?id=${listing.id}" class="btn-gold w-full inline-block text-center">View Auction</a>
-            </div>
-        </div>
+      <a href="/listings/listing/?id=${listing.id}">
+        <img 
+          src="${imageUrl}" 
+          alt="${imageAlt}" 
+          class="product-card-image"
+          decoding="async"
+          width="400"
+          height="400"
+        >
+      </a>
+      <div class="product-card-content">
+        <p class="product-card-time">${timeRemaining}</p>
+        <h3 class="product-card-title">${listing.title}</h3>
+        <p class="product-card-bid">CURRENT BID: $ ${currentBid.toLocaleString()}</p>
+        <a href="/listings/listing/?id=${listing.id}" class="btn-gold w-full inline-block text-center">View Auction</a>
+      </div>
+    </div>
     `;
 }
 
