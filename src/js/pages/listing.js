@@ -4,6 +4,7 @@ import { getUser, getToken } from "../storage/localStorage.js";
 import { toggleWatchlist, isInWatchlist } from "../storage/watchlist.js";
 import { getProfile } from "../api/profiles/getProfile.js";
 import { showAlert } from "../utils/alerts.js";
+import { optimizeImageUrl } from "../utils/optimizeImages.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const listingId = urlParams.get("id");
@@ -71,19 +72,33 @@ function renderThumbnails(media) {
   }
 
   thumbnailGalleryEl.innerHTML = media
-    .map(
-      (item, index) => `
-      <button class="thumbnail-btn aspect-square overflow-hidden rounded border-2 ${index === 0 ? "border-button-gold" : "border-transparent"} hover:border-button-gold transition-colors">
-        <img src="${item.url}" alt="${item.alt || ""}" class="w-full h-full object-cover" data-index="${index}">
-      </button>
-    `,
-    )
+    .map((item, index) => {
+      const thumbUrl = optimizeImageUrl(item.url, "small");
+
+      return `
+        <button class="thumbnail-btn aspect-square overflow-hidden rounded border-2 ${index === 0 ? "border-button-gold" : "border-transparent"} hover:border-button-gold transition-colors">
+          <img 
+            src="${thumbUrl}" 
+            alt="${item.alt || ""}" 
+            class="w-full h-full object-cover" 
+            data-index="${index}"
+            data-full-url="${item.url}"
+            loading="lazy"
+            decoding="async"
+            width="150"
+            height="150"
+          >
+        </button>
+      `;
+    })
     .join("");
 
   thumbnailGalleryEl.querySelectorAll(".thumbnail-btn img").forEach((img) => {
     img.addEventListener("click", () => {
       const index = parseInt(img.dataset.index);
-      mainImageEl.src = media[index].url;
+      const fullUrl = img.dataset.fullUrl;
+
+      mainImageEl.src = optimizeImageUrl(fullUrl, "large");
       mainImageEl.alt = media[index].alt || "";
 
       thumbnailGalleryEl
@@ -153,8 +168,17 @@ async function loadListing() {
     breadcrumbTitleEl.textContent = data.title;
 
     const mainImage = data.media?.[0];
-    mainImageEl.src = mainImage?.url || "/public/assets/placeholder.jpg";
+    const optimizedUrl = mainImage?.url
+      ? optimizeImageUrl(mainImage.url, "large")
+      : "/public/assets/placeholder.jpg";
+
+    mainImageEl.src = optimizedUrl;
     mainImageEl.alt = mainImage?.alt || data.title;
+
+    mainImageEl.setAttribute("fetchpriority", "high");
+    mainImageEl.setAttribute("decoding", "async");
+    mainImageEl.setAttribute("width", "800");
+    mainImageEl.setAttribute("height", "800");
 
     renderThumbnails(data.media);
 

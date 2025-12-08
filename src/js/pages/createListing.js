@@ -1,6 +1,11 @@
 import { createListing } from "../api/listings/createListing.js";
 import { getUser, getToken } from "../storage/localStorage.js";
 import { showAlert } from "../utils/alerts.js";
+import {
+  validateTitle,
+  validateEndDate,
+  validateUrl,
+} from "../utils/validation.js";
 
 const user = getUser();
 const token = getToken();
@@ -32,23 +37,18 @@ form.addEventListener("submit", async (e) => {
   const description = descriptionInput.value.trim();
   const endsAt = endsAtInput.value;
 
-  if (!title) {
-    showAlert("Title is required.", "error");
+  const titleValidation = validateTitle(title);
+  if (!titleValidation.valid) {
+    showAlert(titleValidation.error, "error");
     return;
   }
 
-  if (!endsAt) {
-    showAlert("Auction end time is required.", "error");
+  const dateValidation = validateEndDate(endsAt);
+  if (!dateValidation.valid) {
+    showAlert(dateValidation.error, "error");
     return;
   }
 
-  const endsAtDate = new Date(endsAt);
-  if (endsAtDate <= new Date()) {
-    showAlert("Auction end time must be in the future.", "error");
-    return;
-  }
-
-  const media = [];
   const imageUrls = [
     imageUrl1Input.value.trim(),
     imageUrl2Input.value.trim(),
@@ -56,11 +56,19 @@ form.addEventListener("submit", async (e) => {
     imageUrl4Input.value.trim(),
   ];
 
-  imageUrls.forEach((url) => {
+  const media = [];
+
+  for (let i = 0; i < imageUrls.length; i++) {
+    const url = imageUrls[i];
     if (url) {
-      media.push({ url, alt: "" });
+      const urlValidation = validateUrl(url, `Image URL ${i + 1}`);
+      if (!urlValidation.valid) {
+        showAlert(urlValidation.error, "error");
+        return;
+      }
+      media.push({ url, alt: `${title} - Image ${i + 1}` });
     }
-  });
+  }
 
   const tagsValue = tagsInput.value.trim();
   const tags = tagsValue
@@ -72,7 +80,7 @@ form.addEventListener("submit", async (e) => {
 
   const listingData = {
     title,
-    endsAt: endsAtDate.toISOString(),
+    endsAt: new Date(endsAt).toISOString(),
   };
 
   if (description) {

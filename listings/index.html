@@ -12,6 +12,8 @@
       content="online auctions, luxury items, designer handbags, jewelry auctions, watch auctions, collectibles, art auctions, active listings"
     />
     <meta name="author" content="Maison Ardéne" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="icon"
       type="image/png"
@@ -43,7 +45,7 @@
           </h1>
 
           <p
-            class="font-sans text-base md:text-lg text-center max-w-7xl mx-auto mb-12 text-secondary-text leading-relaxed"
+            class="font-sans text-base md:text-lg text-center max-w-7xl mx-auto mb-12 text-secondary-text leading-relaxed min-h-[120px] md:min-h-[100px]"
           >
             Explore our curated selection of exceptional pieces from sellers
             around the world. Each listing has been carefully prepared to
@@ -62,14 +64,16 @@
                   type="text"
                   id="search-input"
                   placeholder="Search Maison Ardéne"
+                  aria-label="Search Maison Ardéne"
                   class="w-full py-3 pl-4 pr-12 border border-[#d8d6d0] rounded bg-[#fefbf4] font-sans text-base focus:outline-none focus:border-button-gold"
                 />
                 <button
                   id="search-btn"
-                  class="absolute right-4 top-1/2 -translate-y-1/2 text-primary-text hover:text-button-gold transition-colors"
+                  aria-label="Search Listings"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-primary-text hover:text-button-gold transition-colors"
                 >
                   <svg
-                    class="w-5 h-5"
+                    class="w-6 h-6"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -86,9 +90,12 @@
 
               <div class="flex gap-4 md:contents">
                 <div class="flex-1 md:w-48">
+                  <label for="category-dropdown" class="sr-only"
+                    >Filter by category</label
+                  >
                   <select
                     id="category-dropdown"
-                    class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
+                    class="w-full py-3 px-4 border border-border rounded bg-card font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
                   >
                     <option value="">All Categories</option>
                     <option value="watches">Watches</option>
@@ -107,9 +114,10 @@
                 </div>
 
                 <div class="flex-1 md:w-48">
+                  <label for="sort-select" class="sr-only">Sort listings</label>
                   <select
                     id="sort-select"
-                    class="w-full py-3 pl-4 pr-10 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
+                    class="w-full py-3 pl-4 pr-10 border border-border rounded bg-card font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
                   >
                     <option value="newest">Recently Added</option>
                     <option value="ending-soon">Ending Soon</option>

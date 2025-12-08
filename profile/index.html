@@ -12,6 +12,10 @@
       content="user profile, auction history, active bids, user listings"
     />
     <meta name="author" content="Maison Ardéne" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://v2.api.noroff.dev" />
+    <link rel="dns-prefetch" href="https://v2.api.noroff.dev" />
     <link
       rel="icon"
       type="image/png"
@@ -42,7 +46,7 @@
         <div class="relative h-26 md:h-30 lg:h-40 overflow-hidden bg-gray-200">
           <img
             id="banner-image"
-            src=""
+            src="/public/assets/placeholder.jpg"
             alt="Banner"
             class="w-full h-full object-cover"
           />
@@ -55,7 +59,7 @@
             >
               <img
                 id="avatar-image"
-                src=""
+                src="/public/assets/placeholder.jpg"
                 alt="Avatar"
                 class="w-full h-full object-cover"
               />
@@ -65,7 +69,9 @@
           <h1
             id="profile-name"
             class="font-heading font-bold text-4xl md:text-5xl text-center mb-4"
-          ></h1>
+          >
+            Loading..
+          </h1>
 
           <p
             id="profile-bio"
@@ -94,11 +100,13 @@
           <div class="border-b border-border mb-6"></div>
 
           <div class="mb-8">
-            <!-- Mobile Dropdown -->
             <div class="block sm:hidden">
+              <label for="filter-dropdown" class="sr-only"
+                >Filter listings</label
+              >
               <select
                 id="filter-dropdown"
-                class="w-full py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
+                class="w-full py-3 px-4 border border-border rounded bg-card font-sans text-base focus:outline-none focus:border-button-gold cursor-pointer"
               >
                 <option value="active">Active Listings</option>
                 <option value="previous">Previous Listings</option>
@@ -108,7 +116,6 @@
               </select>
             </div>
 
-            <!-- Desktop Tabs -->
             <div
               class="hidden sm:flex flex-wrap gap-2 justify-center"
               id="filter-tabs"

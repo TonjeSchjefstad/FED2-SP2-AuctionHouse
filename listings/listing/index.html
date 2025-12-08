@@ -12,6 +12,10 @@
       content="auction item, place bid, luxury auction, online bidding, collectible auction"
     />
     <meta name="author" content="Maison Ardéne" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://v2.api.noroff.dev" />
+    <link rel="dns-prefetch" href="https://v2.api.noroff.dev" />
     <link
       rel="icon"
       type="image/png"
@@ -63,8 +67,12 @@
                 <div class="mb-4">
                   <img
                     id="main-image"
-                    src=""
-                    alt=""
+                    src="/public/assets/placeholder.jpg"
+                    alt="Loading listing image..."
+                    width="800"
+                    height="800"
+                    fetchpriority="high"
+                    decoding="async"
                     class="w-full aspect-square object-cover rounded bg-card"
                   />
                 </div>
@@ -79,7 +87,9 @@
                   <h1
                     id="listing-title"
                     class="font-heading font-bold text-3xl md:text-4xl lg:text-5xl"
-                  ></h1>
+                  >
+                    Loading listing...
+                  </h1>
                   <button
                     id="watchlist-btn"
                     class="text-primary-text hover:text-button-gold transition-colors p-2"
@@ -109,7 +119,7 @@
                 <div class="mb-6">
                   <a
                     id="seller-link"
-                    href="/profile/?name=${seller.name}"
+                    href="/profile/"
                     class="inline-flex items-center gap-2 px-4 py-2 bg-button-dark text-button-dark-text rounded-full text-sm font-sans"
                   >
                     <span>Seller:</span>
@@ -137,11 +147,14 @@
                     Your available credit: $0
                   </p>
 
+                  <label for="bid-input" class="sr-only"
+                    >Enter your bid amount</label
+                  >
                   <input
                     type="number"
                     id="bid-input"
                     placeholder="$0"
-                    class="w-full mb-3 text-center py-3 px-4 border border-[#D8D6D0] rounded bg-[#FEFBF4] font-sans text-base focus:outline-none focus:border-button-gold"
+                    class="w-full mb-3 text-center py-3 px-4 border border-border rounded bg-card font-sans text-base focus:outline-none focus:border-button-gold"
                   />
                   <button id="place-bid-btn" class="btn-gold w-full">
                     Place Bid
