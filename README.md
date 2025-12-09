@@ -189,7 +189,11 @@ FED2-SP2-AuctionHouse
 - Light/Dark Mode
 - Unit and E2E testing
 
-
+## JSDocs
+- `loginUser` (src\js\api\auth\login.js) → Handles user authentication
+- `registerUser` (src/js/api/auth/register.js) → Creates a new user account
+- `createListing` (src\js\api\listings\createListing.js) → Creates new listing with title, description, images and end date. 
+- `placeBid`  (src\js\api\listings\placeBid.js) → Places bid on listing with credit balance validation.
 
 ## Contact
 ### Tonje Schjefstad
