@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .js",
+    "format": "prettier --write \"src/**/*.{js,css,html}\"",
     "prepare": "husky install || true"
+    
   },
   "repository": {
     "type": "git",
