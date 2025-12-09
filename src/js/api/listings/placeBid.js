@@ -1,6 +1,14 @@
 import { API_LISTINGS, API_KEY } from "../constants.js";
 import { getToken } from "../../storage/localStorage.js";
 
+/**
+ * Place a bid on a listing.
+ * @param {string} listingId - the ID of the listing to place a bid on.
+ * @param {number} amount - the bid amount in credits.
+ * @returns {Promise<object>} - the response data from the place bid API.
+ * @throws {Error} - will throw an error if the bid placement fails.
+ */
+
 export async function placeBid(listingId, amount) {
   try {
     const token = getToken();
