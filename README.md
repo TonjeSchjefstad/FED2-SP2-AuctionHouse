@@ -218,3 +218,6 @@ Noroff School of Technology and Digital Media
 - GitHub: https://github.com/TonjeSchjefstad
 - Student email: tonsch03841@stud.noroff.no
 - Private email: Tonje_schjefen@hotmail.com
+
+## Acknowledgments
+- Noroff for providing the API used in this project
