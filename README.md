@@ -195,6 +195,20 @@ FED2-SP2-AuctionHouse
 - `createListing` (src\js\api\listings\createListing.js) → Creates new listing with title, description, images and end date. 
 - `placeBid`  (src\js\api\listings\placeBid.js) → Places bid on listing with credit balance validation.
 
+
+## Contributing
+Feel free to contribute! Create a new branch and open a Pull Request, and I'll take a look!
+1. Fork the repository
+2. Create a new branch for your feature or fix:
+```bash
+git checkout -b feature/your-feature-name
+```
+3. Make your changes and commit them with a clear message.
+4. Push your branch and open a Pull Request for review.
+
+Please make sure your code is clean and tested before submitting a PR.
+
+
 ## Contact
 ### Tonje Schjefstad
 Frontend Development Student
