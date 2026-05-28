@@ -1,6 +1,6 @@
 export function renderHeader() {
   return `
-    <div class=" bg-header border-b border-border py-2 shadow-md">
+    <div class=" bg-header border-b border-border py-4 shadow-md">
         <div class="max-w-[1440px] mx-auto px-4 md:px-8 lg:px-4">
             <div class="flex items-center justify-between">
 

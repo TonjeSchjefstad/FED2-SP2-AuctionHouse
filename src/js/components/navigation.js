@@ -69,7 +69,7 @@ export function renderNavigation() {
           <h2 class="font-heading text-2xl mb-6">Sign In</h2>
           <p class="font-sans text-base mb-6">Sign in to access your profile, create listings, and place bids.</p>
           <button id="show-signin" class="btn-dark w-full mb-3">Sign In</button>
-          <button id="show-register" class="btn-gold w-full">Create an account</button>
+          <button id="show-register" class="btn-dark-outline w-full">Create an account</button>
         </div>
 
         <div id="profile-signin-view" class="hidden mt-12">
@@ -109,7 +109,7 @@ export function renderNavigation() {
             
             <button type="submit" class="btn-dark w-full">Sign In</button>
             
-            <button type="button" id="goto-register" class="btn-gold w-full">Create an account</button>
+            <button type="button" id="goto-register" class="btn-dark-outline w-full">Create an account</button>
           </form>
         </div>
 
@@ -161,9 +161,9 @@ export function renderNavigation() {
               >
             </div>
             
-            <button type="submit" class="btn-gold w-full">Register</button>
+            <button type="submit" class="btn-dark w-full">Register</button>
             
-            <button type="button" id="goto-signin" class="btn-dark w-full">Sign In</button>
+            <button type="button" id="goto-signin" class="btn-dark-outline w-full">Sign In</button>
           </form>
         </div>
 

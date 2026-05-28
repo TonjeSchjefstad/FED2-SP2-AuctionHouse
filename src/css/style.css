@@ -4,18 +4,19 @@
 
 @theme {
     --color-primary-bg: #F5F2EB;
-    --color-bg-dark: #0E2033;
+    --color-bg-dark: #EDE8DE;
     --color-header: #FBFAF5;
+    --color-footer: #0E2033;
 
     --color-primary-text: #1B1C1E;
     --color-text-secondary: #F5F2EB;
 
-    --color-button-gold: #C6A24A;
-    --color-button-gold-hovered: #D4B75A;
+    --color-button-gold: #8B6914;
+    --color-button-gold-hovered: #A07E31;
     --color-button-gold-active: #A07E31;
     --color-button-gold-text: #000000;
 
-    --color-button-dark: #0E2033;
+    --color-button-dark: #1C2E3E;
     --color-button-dark-hovered: #2B3A4E;
     --color-button-dark-text: #FFFFFF;
 
@@ -48,14 +49,17 @@
 @layer components {
     .btn-gold {
         background-color: var(--color-button-gold);
-        color: var(--color-button-gold-text);
+        color: var(--color-button-dark-text);
         font-family: var(--font-button);
-        font-weight: bold;
+        font-weight: semibold;
         padding: 0.75rem 2rem;
         cursor: pointer;
         border-radius: 4px;
         box-shadow: 0 2px 8px rgba(198, 162, 74, 0.25), 0 1px 3px rgba(198, 162, 74, 0.15);
         transition: background-color 0.2s;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 0.875rem;
     }
 
     .btn-gold:hover {
@@ -84,6 +88,46 @@
         box-shadow: 0 4px 12px rgba(19, 27, 39, 0.25), 0 2px 6px rgba(19, 27, 39, 0.15);
         transition: background-color 0.2s;
         transition: all 0.2s ease;
+    }
+
+    .btn-dark-outline {
+        background-color: transparent;
+        color: var(--color-button-dark);
+        border: 2px solid var(--color-button-dark);
+        font-family: var(--font-button);
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        cursor: pointer;
+        border-radius: 4px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+
+    .btn-dark-outline:hover {
+        background-color: var(--color-button-dark);
+        color: #FFFFFF;
+    }
+
+    .btn-gold-outline {
+        background-color: transparent;
+        color: #8B6914;
+        border: 2px solid #8B6914;
+        font-family: var(--font-button);
+        font-weight: bold;
+        padding: 0.75rem 2.5rem;
+        cursor: pointer;
+        border-radius: 4px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+    }
+
+    .btn-gold-outline:hover {
+        background-color: #8B6914;
+        color: #FFFFFF;
     }
 
     .product-card {
