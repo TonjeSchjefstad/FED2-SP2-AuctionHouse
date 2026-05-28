@@ -1,6 +1,6 @@
 # Maison Ardéne Auction House
 
-![image](https://i.imghippo.com/files/gifw1005sAE.png)
+![image](https://i.imghippo.com/files/wspz8587cTo.webp)
 
 ## Description
 This project is the frontend for Maison Ardéne, a fictional high-end auction house. Built for my Semester Project 2 at Noroff using vanilla JavaScript and Tailwind CSS. It allows users to browse luxury items, place bids, and manage their own listings. The site integrates with the Noroff Auction House API v2, providing a clean, modern, and fully functional auction experience.
